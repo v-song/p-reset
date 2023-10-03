@@ -1,5 +1,5 @@
 # p-reset
 FA23: p-reset
-# People
+### People
 Sumi Vora     
 Vivien Song
