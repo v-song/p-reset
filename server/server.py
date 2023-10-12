@@ -12,7 +12,8 @@ app = Flask(__name__)
 DATABASE_URL = 'postgresql://temp:temp@localhost:5432/journals'
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL  # need to set up database
 db = SQLAlchemy(app)
-db.create_all()
+with app.app_context():
+    db.create_all()
 CORS(app)
 
 # create engine
