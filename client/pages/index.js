@@ -19,13 +19,22 @@ function index() {
       });
   }, []);
 
-  return(
+  
+  return (
     <div>
       <div>{message}</div>
-      
-    {people.map((person, index) => ( // grabs person in people array by index and displays
-      <div key ={index}>{person}</div>
+      {people.map((person, index) => (
+        <div key={index}>{person}</div>
       ))}
+      <form method="POST" action="/add_entry">
+        <label htmlFor="title">Title:</label>
+        <input type="text" id="title" name="title" /><br />
+  
+        <label htmlFor="content">Content:</label>
+        <textarea id="content" name="content"></textarea><br />
+  
+        <input type="submit" value="Submit" />
+      </form>
     </div>
   );
 }
