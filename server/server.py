@@ -59,11 +59,11 @@ for row in entries:
 @app.route('/add_entry', methods=['POST'])
 def add_entry():
     # Get the title and content from the form data
-    title = request.get_json['name']
-    header = request.get_json['header']
-    description = request.get_json['description']
-    request.headers.add('Access-Control-Allow-Origin', '*')
-
+    title = request.get_json()['name']
+    header = request.get_json()['header']
+    description = request.get_json()['description']
+    response = jsonify({'message': 'added to database'})
+    response.headers.add('Access-Control-Allow-Origin', '*')
 
     # Create a new JournalEntry object with the form data
     new_entry = JournalEntry(title=title, header=header, description=description)
@@ -73,8 +73,8 @@ def add_entry():
     db.session.commit()
 
     # Redirect the user to the home page
-    flash('added to database')
-    return redirect('http://localhost:3000')
+    return response
+
 
 # make api requests
 @app.route("/api/home", methods=['GET'])
