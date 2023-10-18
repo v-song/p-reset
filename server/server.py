@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import Column, Integer, String, ARRAY, Time, ForeignKey
+from sqlalchemy import Column, Integer, String, ARRAY, Time, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import time
 
@@ -47,7 +47,7 @@ class User(Base):
     email = Column(String(500))
     sms = Column(Integer)
 
-class  Event(Base):
+class Event(Base):
     __tablename__ = 'events'
     id = Column(Integer, primary_key=True)
     header = Column(String(50))
@@ -59,6 +59,15 @@ class  Event(Base):
     frequency = Column(String(50))
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship('User', backref='events')
+
+class Journal(Base):
+    __tablename__ = 'journals'
+    id = Column(Integer, primary_key=True)
+    header = Column(String(50))
+    datetime = Column(DateTime)
+    description = Column(String(500))
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship('User', backref='journals')
 
 
 # Create a new instance of the Blank model with the data you want to add

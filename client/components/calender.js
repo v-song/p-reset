@@ -1,15 +1,13 @@
 import React from 'react'
 import { useState } from "react";
-import {BsCalendarPlus} from 'react-icons/bs'
-import {MdOutlineArrowDropDown} from 'react-icons/md'
 import {ImLocation} from 'react-icons/im'
 import {AiOutlineStar} from 'react-icons/ai'
 import {AiFillStar} from 'react-icons/ai'
 import {FaUpload} from 'react-icons/fa'
 import {BiSolidTimeFive} from 'react-icons/bi'
 
-const Calender = () => {
-    const [isOpen, setIsOpen] = useState(true);
+const Calender = ({Open}) => {
+
     const [isFavorite, setIsFavorite] = useState(false);
 
     const handleSubmit = (event) => {
@@ -38,25 +36,14 @@ const Calender = () => {
         .then((response) => response.json())
         .then((data) => {
             console.log(data);
-            setIsOpen(false);
+            () => Open();
             setIsFavorite(false);
         })
         .catch((error) => console.error(error));
     };
   return (
     <div className=''>
-    <button
-      className="ml-4 px-4 py-2 text-center rounded-2xl border bg-gradient-to-r from-yellow-500 via-green-600 to-blue-500 text-white hover:scale-105 transform transition-all duration-500 ease-in-out hover:shadow-lg hover:shadow-stone-400"
-      onClick={() => setIsOpen(!isOpen)}
-    >
-      <BsCalendarPlus className="inline-block mr-2" />  
-      Create
-      <MdOutlineArrowDropDown className="inline-block ml-2 text-2xl" />
-    </button>
-
-
     <div className="w-full flex justify-center items-center">
-    {isOpen && (
       <form
         action="/add_entry"
         method="POST"
@@ -182,7 +169,7 @@ const Calender = () => {
             type="button"
             tabIndex={0}
             className="mt-3 w-24 rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 hover:scale-95 ml-3"
-            onClick={() => setIsOpen(false)}
+            onClick={() => Open()}
           >
             Cancel
           </button>
@@ -198,7 +185,6 @@ const Calender = () => {
          
         </div>
       </form>
-    )}
     <div/>
 
     </div>

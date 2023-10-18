@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Calender from "@/components/calender";
+import CreateButton from "@/components/CreateButton";
 import Navbar from "@/components/Navbar";
 
 
@@ -9,7 +9,7 @@ function MyComponent() {
   return (
    <div>
     <Navbar />
-    <Calender />
+    <CreateButton />
    </div>
   );
 }
