@@ -17,12 +17,17 @@ const Calender = () => {
         const formData = new FormData(event.target);
         const header = formData.get("header");
         const description = formData.get("description");
-        const time = formData.get("time");
+        const start_time = formData.get("start_time");
+        const end_time = formData.get("end_time");
         const location = formData.get("location");
         const file = formData.get("file");
         const frequency = formData.get("frequency");
-        const days = formData.get("days");
-        const data = { header, description, time, location, file, frequency, days, isFavorite };
+        const days = formData.getAll("days");
+        if (days.length === 0) {
+          alert("Please select at least one day.");
+          return;
+        }
+        const data = { header, description, start_time, end_time, location, file, frequency, days, isFavorite };
         fetch("http://localhost:8080/add_entry", {
         method: "POST",
         headers: {
@@ -33,8 +38,8 @@ const Calender = () => {
         .then((response) => response.json())
         .then((data) => {
             console.log(data);
-            // setEvent([...event, data]);
             setIsOpen(false);
+            setIsFavorite(false);
         })
         .catch((error) => console.error(error));
     };
@@ -136,6 +141,7 @@ const Calender = () => {
             <select
               className="rounded-sm p-2 focus:outline-none focus:border-b-2 w-64 focus:border-blue-500 focus:bg-slate-100"
               name="frequency"
+              defaultValue={"one time"}
               required
             >
               <option value="one time">One Time</option>

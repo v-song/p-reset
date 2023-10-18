@@ -5,8 +5,9 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ARRAY, Time, ForeignKey
 from sqlalchemy.orm import relationship
+from datetime import time
 
 
 app = Flask(__name__) 
@@ -49,9 +50,10 @@ class User(Base):
 class  Event(Base):
     __tablename__ = 'events'
     id = Column(Integer, primary_key=True)
-    title = Column(String(50))
-    time = Column(String(50))
-    days = Column(String(50))
+    header = Column(String(50))
+    start_time =  Column(Time)
+    end_time = Column(Time)
+    days = Column(ARRAY(String(50)))
     file = Column(String(50))
     location = Column(String(50))
     frequency = Column(String(50))
@@ -68,32 +70,36 @@ class  Event(Base):
 # Commit the changes to the database
 # session.commit()
 
-# Query the database for all journal entries
-entries = session.query(JournalEntry).all()
+
+users = session.query(User).all()
 
 new_user = User(name="p-ai", email="pai@gmail", sms=1234567890)
 
-for row in entries:
-    print(f"ID: {row.id}, Title: {row.title}, Header: {row.header}, Description: {row.description}")
+for row in users:
+    print(f"ID: {row.id}, Name: {row.name}, Email: {row.email}")
 
 
 # make route for add netry endpoint
 @app.route('/add_entry', methods=['POST'])
 def add_entry():
     # Get the title and content from the form data
-    title = request.get_json()['title']
     header = request.get_json()['header']
-    description = request.get_json()['description']
-    time = request.get_json()['time']
+    description = request.get_json().get('description', '')
+    start_time = request.get_json()['start_time']
+    start_time_obj = time.fromisoformat(start_time)
+    end_time = request.get_json()['end_time']
+    end_time_obj = time.fromisoformat(end_time)
     days = request.get_json()['days']
-    file = request.get_json()['file']
-    location = request.get_json()['location']
+    file = request.get_json().get('file', '')
+    location = request.get_json().get('location', '')
     frequency = request.get_json()['frequency']
+    favorite = request.get_json().get('favorite', False)
+    # Create a new response object to send back to the client
     response = jsonify({'message': 'added to database'})
     response.headers.add('Access-Control-Allow-Origin', '*')
 
     # Create a new JournalEntry object with the form data
-    new_entry = Event(title=title, header=header, description=description, time=time, days=days, file=file, location=location, frequency=frequency, user_id=1)
+    new_entry = Event(header=header, description=description, start_time=start_time_obj, end_time=end_time_obj, days=days, file=file, location=location, frequency=frequency, favorite=favorite, user_id=1)
     # Add the new entry to the database session
     db.session.add(new_entry)
     db.session.commit()
