@@ -27,6 +27,8 @@ const Calender = ({Open}) => {
         }
         const data = { header, description, start_time, end_time, location, file, frequency, days, isFavorite };
         fetch("http://localhost:8080/add_entry", {
+        mode: 'no-cors',
+
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -39,7 +41,7 @@ const Calender = ({Open}) => {
             () => Open();
             setIsFavorite(false);
         })
-        .catch((error) => console.error(error));
+        .catch((error) => alert(error));
     };
   return (
     <div className=''>
