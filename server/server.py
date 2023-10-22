@@ -16,7 +16,9 @@ app.secret_key = 'unsafe'
 DATABASE_URL = 'postgresql://temp:temp@127.0.0.1:5432/journals'
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL  # need to set up database
 db = SQLAlchemy(app)
-CORS(app, resources={r"/add_entry": {"origins": "http://localhost:3000"}})
+CORS(app, resources={r"http://127.0.0.1:8080/add_entry": {"origins": "http://localhost:3000"}})
+CORS(app, resources={r"http://127.0.0.1:8080/get_entries": {"origins": "http://localhost:3000"}})
+
 
 # create engine
 engine = create_engine(DATABASE_URL)
@@ -111,7 +113,6 @@ def add_entry():
     if not request.is_json:
         return jsonify({'error': 'Invalid request body'}), 400
     
-
     # Get the title and content from the form data
     header = request.get_json().get('header')
 
@@ -120,7 +121,6 @@ def add_entry():
     [hour, minute, second] = start_time.split(":")
     #start_time_obj = Time(hour, minute, second)
     start_time_obj = time.fromisoformat(start_time)
-    print("test2")
     end_time = request.get_json().get('end_time')
     [hourE, minuteE, secondE] = end_time.split(":")
     #end_time_obj = Ti me(hourE, minuteE, secondE)

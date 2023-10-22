@@ -5,7 +5,13 @@ const Entries = () => {
   const [journals, setJournals] = useState([]);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8080/get_entries')
+    fetch('http://127.0.0.1:8080/get_entries',{
+      mode: 'no-cors',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
     
       .then(response => response.json())
       .then(data => setJournals(data))
