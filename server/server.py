@@ -40,6 +40,7 @@ class JournalEntry(Base):
     title = Column(String(50))
     header = Column(String(500))
     description = Column(String(500))
+    query = session.query_property()
 
 class User(Base):
     __tablename__ = 'users'
