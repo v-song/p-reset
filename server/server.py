@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import Column, Integer, String, ARRAY, Time, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, ARRAY, Time, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import time
 
@@ -16,7 +16,9 @@ app.secret_key = 'unsafe'
 DATABASE_URL = 'postgresql://temp:temp@127.0.0.1:5432/journals'
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL  # need to set up database
 db = SQLAlchemy(app)
-CORS(app)
+CORS(app, resources={r"http://127.0.0.1:8080/add_entry": {"origins": "http://localhost:3000"}})
+CORS(app, resources={r"http://127.0.0.1:8080/get_entries": {"origins": "http://localhost:3000"}})
+
 
 # create engine
 engine = create_engine(DATABASE_URL)
@@ -38,6 +40,7 @@ class JournalEntry(Base):
     title = Column(String(50))
     header = Column(String(500))
     description = Column(String(500))
+    query = session.query_property()
 
 class User(Base):
     __tablename__ = 'users'
@@ -51,14 +54,16 @@ class Event(Base):
     __tablename__ = 'events'
     id = Column(Integer, primary_key=True)
     header = Column(String(50))
+    description = Column(String(500))
     start_time =  Column(Time)
     end_time = Column(Time)
     days = Column(ARRAY(String(50)))
     file = Column(String(50))
     location = Column(String(50))
+    favorite = Column(Boolean)
     frequency = Column(String(50))
-    user_id = Column(Integer, ForeignKey('users.id'))
-    user = relationship('User', backref='events')
+    # user_id = Column(Integer, ForeignKey('users.id'))
+    # user = relationship('User', backref='events')
 
 class Journal(Base):
     __tablename__ = 'journals'
@@ -80,32 +85,55 @@ class Journal(Base):
 # session.commit()
 
 
-users = session.query(User).all()
 
-new_user = User(name="p-ai", email="pai@gmail", sms=1234567890)
+# new_user = User(id=1, name="p-ai", email="pai@gmail", sms=1234567890)
+# session.add(new_user)
+# session.commit()
+# users = session.query(User).all()
 
-for row in users:
-    print(f"ID: {row.id}, Name: {row.name}, Email: {row.email}")
+
+# for row in users:
+#     print(f"ID: {row.id}, Name: {row.name}, Email: {row.email}")
+
+
+@app.route('/get_entries')
+def get_journals():
+    journals = JournalEntry.query.all()
+    response =jsonify([{'id': journal.id, 'title': journal.title, 'header': 
+                     journal.header, 'description': journal.description} for journal in journals])
+    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+    response.headers.add('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+    return response
+
 
 
 # make route for add netry endpoint
 @app.route('/add_entry', methods=['POST'])
 def add_entry():
+    if not request.is_json:
+        return jsonify({'error': 'Invalid request body'}), 400
+    
     # Get the title and content from the form data
-    header = request.get_json()['header']
-    description = request.get_json().get('description', '')
-    start_time = request.get_json()['start_time']
+    header = request.get_json().get('header')
+
+    description = request.get_json().get('description')
+    start_time = request.get_json().get('start_time')
+    [hour, minute, second] = start_time.split(":")
+    #start_time_obj = Time(hour, minute, second)
     start_time_obj = time.fromisoformat(start_time)
-    end_time = request.get_json()['end_time']
+    end_time = request.get_json().get('end_time')
+    [hourE, minuteE, secondE] = end_time.split(":")
+    #end_time_obj = Ti me(hourE, minuteE, secondE)
     end_time_obj = time.fromisoformat(end_time)
-    days = request.get_json()['days']
+    days = request.get_json().get('days')
     file = request.get_json().get('file', '')
     location = request.get_json().get('location', '')
-    frequency = request.get_json()['frequency']
+    frequency = request.get_json().get('frequency')
     favorite = request.get_json().get('favorite', False)
     # Create a new response object to send back to the client
     response = jsonify({'message': 'added to database'})
-    response.headers.add('Access-Control-Allow-Origin', '*')
+    # response.headers.add('Access-Control-Allow-Origin', '*')
 
     # Create a new JournalEntry object with the form data
     new_entry = Event(header=header, description=description, start_time=start_time_obj, end_time=end_time_obj, days=days, file=file, location=location, frequency=frequency, favorite=favorite, user_id=1)

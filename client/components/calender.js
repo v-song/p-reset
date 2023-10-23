@@ -11,36 +11,46 @@ const Calender = ({Open}) => {
     const [isFavorite, setIsFavorite] = useState(false);
 
     const handleSubmit = (event) => {
-        event.preventDefault();
-        const formData = new FormData(event.target);
-        const header = formData.get("header");
-        const description = formData.get("description");
-        const start_time = formData.get("start_time");
-        const end_time = formData.get("end_time");
-        const location = formData.get("location");
-        const file = formData.get("file");
-        const frequency = formData.get("frequency");
-        const days = formData.getAll("days");
-        if (days.length === 0) {
-          alert("Please select at least one day.");
-          return;
-        }
-        const data = { header, description, start_time, end_time, location, file, frequency, days, isFavorite };
-        fetch("http://localhost:8080/add_entry", {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+      const header = formData.get("header");
+      const description = formData.get("description");
+      const start_time_temp = formData.get("start_time");
+      const start_time = formData.get("start_time") + ":00";
+      const end_time_temp = formData.get("end_time");
+      const end_time = formData.get("end_time") + ":00";
+      const location = formData.get("location");
+      const file = formData.get("file");
+      const frequency = formData.get("frequency");
+      const days = formData.getAll("days");
+      if (days.length === 0) {
+        alert("Please select at least one day.");
+        return;
+      }
+      const data = { header, description, start_time, end_time, location, file, frequency, days, isFavorite };
+      // const jsonData = JSON.stringify(data);
+      // console.log(jsonData);
+      fetch("http://127.0.0.1:8080/add_entry", {
+        mode: "no-cors",  
         method: "POST",
         headers: {
-            "Content-Type": "application/json",
+          'Content-Type': 'application/json; charset=utf-8'
         },
         body: JSON.stringify(data),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response error");
+          }
+          return response.json();
         })
-        .then((response) => response.json())
         .then((data) => {
             console.log(data);
             () => Open();
             setIsFavorite(false);
             alert("Task added successfully!");
         })
-        .catch((error) => console.error(error));
+        .catch((error) => alert(error));
     };
   return (
     <div className=''>
