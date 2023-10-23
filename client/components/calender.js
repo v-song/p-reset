@@ -38,6 +38,7 @@ const Calender = ({Open}) => {
             console.log(data);
             () => Open();
             setIsFavorite(false);
+            alert("Task added successfully!");
         })
         .catch((error) => console.error(error));
     };

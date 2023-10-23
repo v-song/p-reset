@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from "react";
-import Calender from './calender';
+import Calender from './Calender';
 import Journal from './Journal';
 import {BsCalendarPlus} from 'react-icons/bs'
 import {MdOutlineArrowDropDown} from 'react-icons/md'
