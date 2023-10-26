@@ -44,7 +44,7 @@ const Calender = ({Open}) => {
         })
         .then((data) => {
             console.log(data);
-            () => Open();
+            Open();
             setIsFavorite(false);
             alert("Task added successfully!");
         })

@@ -1,14 +1,61 @@
 import React from 'react'
 import {BsCalendarPlus} from 'react-icons/bs'
+import { useState } from "react";
+import {AiOutlineStar} from 'react-icons/ai'
+import {AiFillStar} from 'react-icons/ai'
 
 const Journal = ({Open}) => {
+    const [isFavorite, setIsFavorite] = useState(false);
+    const user_id = 2
+
+    const handleSubmit = async(event) => {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+      const header = formData.get("header");
+      const description = formData.get("description");
+      const datetime = formData.get("journal_date");;
+      // const file = formData.get("file");
+      const data = { header, description, datetime, isFavorite };
+      // const jsonData = JSON.stringify(data);
+      console.log(data);
+      await fetch(`http://127.0.0.1:5000/api/users/${user_id}/journals`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            console.log(response);
+          }
+          return response.json();
+        })
+        .then((data) => {
+            console.log(data);
+            Open();
+            setIsFavorite(false);
+            alert("Journal added successfully!");
+        })
+        .catch((error) => console.log(error));
+    }
   return (
     <div className="w-full flex justify-center items-center"> 
         <form
+        action={`/api/users/${user_id}/journals`}
+        method="POST"
+        onSubmit={handleSubmit}
         className="p-5 h-full w-96 mt-8 flex items-start justify-center rounded-md border border-slate-700 flex-col gap-3">
           <div className='flex flex-col gap-5 justify-between w-full'>
-            <div className="text-xl font-bold text-slate-600">Add a journal</div>
+          <div className='flex justify-between w-full'>
 
+          <div className="text-xl font-bold text-slate-600">Add a Journal</div>
+          <button type="button" onClick={()=>setIsFavorite(!isFavorite)}>
+              {
+                isFavorite ? <AiFillStar className='text-yellow-500 text-2xl'/> : <AiOutlineStar className='text-yellow-500 text-2xl'/>
+              }
+            </button>
+          </div>
         <div>
           <input
             placeholder="Add Title"
@@ -23,7 +70,7 @@ const Journal = ({Open}) => {
           <input
             type="datetime-local"
             name="journal_date"
-            className="rounded-sm p-2 focus:outline-none focus:border-b-2 w-36 focus:border-blue-500 focus:bg-slate-100 " 
+            className="rounded-sm p-2 focus:outline-none focus:border-b-2 w-full focus:border-blue-500 focus:bg-slate-100 " 
             required
           />
         </div>
