@@ -9,38 +9,36 @@ import {BiSolidTimeFive} from 'react-icons/bi'
 const Calender = ({Open}) => {
 
     const [isFavorite, setIsFavorite] = useState(false);
+    const user_id = 2
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async(event) => {
       event.preventDefault();
       const formData = new FormData(event.target);
       const header = formData.get("header");
       const description = formData.get("description");
-      const start_time_temp = formData.get("start_time");
-      const start_time = formData.get("start_time") + ":00";
-      const end_time_temp = formData.get("end_time");
-      const end_time = formData.get("end_time") + ":00";
+      const start_time = formData.get("start_time");;
+      const end_time = formData.get("end_time");
       const location = formData.get("location");
-      const file = formData.get("file");
+      // const file = formData.get("file");
       const frequency = formData.get("frequency");
       const days = formData.getAll("days");
       if (days.length === 0) {
         alert("Please select at least one day.");
         return;
       }
-      const data = { header, description, start_time, end_time, location, file, frequency, days, isFavorite };
+      const data = { header, description, location, frequency, start_time, end_time, days, isFavorite };
       // const jsonData = JSON.stringify(data);
-      // console.log(jsonData);
-      fetch("http://127.0.0.1:8080/add_entry", {
-        mode: "no-cors",  
+      console.log(data);
+      await fetch(`http://127.0.0.1:5000/api/users/${user_id}/events`, {
         method: "POST",
         headers: {
-          'Content-Type': 'application/json; charset=utf-8'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
       })
         .then((response) => {
           if (!response.ok) {
-            throw new Error("Network response error");
+            console.log(response);
           }
           return response.json();
         })
@@ -50,13 +48,13 @@ const Calender = ({Open}) => {
             setIsFavorite(false);
             alert("Task added successfully!");
         })
-        .catch((error) => alert(error));
+        .catch((error) => console.log(error));
     };
   return (
     <div className=''>
     <div className="w-full flex justify-center items-center">
       <form
-        action="/add_entry"
+        action={`/api/users/${user_id}/events`}
         method="POST"
         className="p-5 h-full w-96 mt-8 flex items-start justify-center rounded-md border border-slate-700 flex-col gap-3"
         onSubmit={handleSubmit}

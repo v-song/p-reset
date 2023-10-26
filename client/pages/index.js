@@ -1,7 +1,7 @@
 import React from "react";
 import CreateButton from "@/components/CreateButton";
 import Navbar from "@/components/Navbar";
-import Entries from "@/components/entries";
+import Entries from "@/components/Entries";
 
 
 
@@ -12,7 +12,7 @@ function MyComponent() {
    <div>
     <Navbar />
     <CreateButton />
-    <Entries/>
+    {/* <Entries/> */}
     </div>
   );
 }
