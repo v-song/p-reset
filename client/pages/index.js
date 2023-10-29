@@ -31,27 +31,28 @@ function index() {
     <button className="button" onClick={() => window.location.href = 'http://localhost:8080/logout'}>
       Logout from Google
     </button>
+    <hr></hr>
     {userInfo && (
             <div>
-                <h2>User Information</h2>
-                <p><strong>Name:</strong> {userInfo.name}</p>
                 <img src={userInfo.picture} alt="User profile" />
+                <p>Welcome to P-reset, <strong>{userInfo.given_name}</strong>!</p>
             </div>
         )}
-    
+    <hr></hr>
     {events.length > 0 && (
             <div>
-                <h2>10 Upcoming Events</h2>
+                <h2><strong>10 Upcoming Events</strong></h2>
                 <ul>
                     {events.map(event => (
                         <li key={event.id}>
-                            {event.summary} - {new Date(event.start.dateTime || event.start.date).toLocaleString()}
+                            {event.summary}: <i>{new Date(event.start.dateTime || event.start.date).toLocaleString()}</i>
                         </li>
                     ))}
                 </ul>
             </div>
         )}
     
+    <button className="button" onClick={() => window.location.href = "http://localhost:3000/add_event"}>Create Event</button>
     </div>
   );
 }

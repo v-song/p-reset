@@ -13,7 +13,7 @@ os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
+CORS(app, origins=["http://localhost:3000", "http://localhost:3000/add_event"], supports_credentials=True)
 app.config['SESSION_COOKIE_SECURE'] = False
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 
@@ -87,14 +87,14 @@ def google_callback():
 
 @app.route('/user_info')
 def get_user_info():
-    print(session)
+    #print(session)
     credentials = session.get("credentials")
     if not credentials:
         return jsonify({"error": "Not authenticated"}), 401
     
     creds = Credentials(**credentials)
     service = build('oauth2', 'v2', credentials=creds)
-    print(credentials)
+    #print(credentials)
     user_info = service.userinfo().get().execute()
     
     return jsonify(user_info)
@@ -120,6 +120,19 @@ def get_events():
     
     return jsonify(events)
 
+@app.route('/add_event', methods=['POST'])
+def add_event():
+    credentials = session.get('credentials')
+    if not credentials:
+        return jsonify({"error": "Not authenticated"}), 401
+
+    creds = Credentials(**credentials)
+    service = build('calendar', 'v3', credentials=creds)
+    
+    event_body = request.json
+    event = service.events().insert(calendarId='primary', body=event_body).execute()
+
+    return jsonify(event)
 
 @app.route('/logout', methods=['GET'])
 def logout():
