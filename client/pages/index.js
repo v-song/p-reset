@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import PushNotification from "./components/push-notification";
 
 function index() {
   const [message, setMessage] = useState("Loading"); // set state variable
@@ -24,7 +23,6 @@ function index() {
 
   return (
     <div>
-      <PushNotification />
       <div>{message}</div>
 
       {people.map(

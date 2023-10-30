@@ -1,3 +1,3 @@
-VAPID_PUBLIC_KEY = "BBBAASD#DFDFFFFFFFFFFFFFFFFFFFFFFF" 
-VAPID_PRIVATE_KEY = "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy" 
+VAPID_PUBLIC_KEY = "BCcgG6rkXA9HmOhmn9BJv6yO4NFr5ZOZVxPYXKvDo8cjT_s2E4FxWkvpNTZBV6T1lTtvTTi3x6cYZxwewCN3nqg" 
+VAPID_PRIVATE_KEY = "dtw1lRJCarX4eFWsCuiF4-Lmued3fsXeoOuDOpkmZrc" 
 VAPID_CLAIM_EMAIL = "angiezhou.az@gmail.com"
