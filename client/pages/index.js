@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import NotificationButton from "@/components/notification-button";
 
 function index() {
   const [message, setMessage] = useState("Loading"); // set state variable
@@ -23,6 +24,7 @@ function index() {
 
   return (
     <div>
+      <NotificationButton />
       <div>{message}</div>
 
       {people.map(
