@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from "react";
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
 
 function index() {
 
   const [userInfo, setUserInfo] = useState(null);
   const [events, setEvents] = useState([]);
+  const calendarEvents = Array.isArray(events) ? 
+  events.map(event => ({
+    title: event.summary,
+    start: new Date(event.start.dateTime),
+    end: new Date(event.end.dateTime),
+  })) : [];
+
 
 
   useEffect(() => {
@@ -17,6 +26,7 @@ function index() {
     fetch('http://localhost:8080/events', {credentials: 'include'})
         .then(response => response.json())
         .then(data => {
+          console.log("now printing")
           console.log(data);
           setEvents(data);
         });
@@ -39,7 +49,7 @@ function index() {
             </div>
         )}
     <hr></hr>
-    {events.length > 0 && (
+    {/* {events.length > 0 && (
             <div>
                 <h2><strong>10 Upcoming Events</strong></h2>
                 <ul>
@@ -50,7 +60,15 @@ function index() {
                     ))}
                 </ul>
             </div>
-        )}
+        )} */}
+    { (
+      <FullCalendar
+      plugins={[ dayGridPlugin ]}
+      initialView="dayGridMonth"
+      events={calendarEvents}
+    />
+    )}
+    
     
     <button className="button" onClick={() => window.location.href = "http://localhost:3000/add_event"}>Create Event</button>
     </div>

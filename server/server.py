@@ -15,7 +15,7 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:3000", "http://localhost:3000/add_event"], supports_credentials=True)
 app.config['SESSION_COOKIE_SECURE'] = False
-app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
 # Configure session to use filesystem
 app.config['SESSION_TYPE'] = 'filesystem'
@@ -54,6 +54,8 @@ def google_login():
 
 @app.route('/google/callback')
 def google_callback():
+    if 'state' not in session:
+        return "State value missing in session", 400
     state = session['state']
     flow = Flow.from_client_config(
         {
@@ -112,10 +114,8 @@ def get_events():
     now = datetime.utcnow().isoformat() + 'Z'
 
     events_result = service.events().list(calendarId='primary', timeMin=now,
-                                              maxResults=10, singleEvents=True,
+                                              maxResults=50, singleEvents=True,
                                               orderBy='startTime').execute()
-        
-    
     events = events_result.get('items', [])
     
     return jsonify(events)
@@ -130,9 +130,14 @@ def add_event():
     service = build('calendar', 'v3', credentials=creds)
     
     event_body = request.json
-    event = service.events().insert(calendarId='primary', body=event_body).execute()
+    try:
+        event = service.events().insert(calendarId='primary', body=event_body).execute()
+        return jsonify(event)
+    except Exception as e:
+        # Logging the exception
+        print(f"An error occurred: {e}")
+        return jsonify({"error": "Failed to add event", "details": str(e)}), 500
 
-    return jsonify(event)
 
 @app.route('/logout', methods=['GET'])
 def logout():
