@@ -2,30 +2,57 @@ import React, { useEffect, useState } from "react";
 
 function index() {
 
-  const [message, setMessage] = useState("Loading"); // set state variable
-  const [people, setPeople] = useState([]); // make array for 'people' from server.py
+  const [userInfo, setUserInfo] = useState(null);
+  const [events, setEvents] = useState([]);
 
-  useEffect(() => { // allows us to create side effects in functional components
-    fetch("http://localhost:8080/api/home")
-    .then( // calls the endpoint
-      (response) => response.json() // get response from api, put into json
-    ).then(
-      (data) => { // retrieve data
-        console.log(data); // so we can check console.log and see that we
-                         // are getting the api endpoint data
-        // message initially set to loading in line 5
-        setMessage(data.message); // once we get data, set message state variable to data
-        setPeople(data.people); // accessing people variable from backend
-      });
-  }, []);
+
+  useEffect(() => {
+    fetch('http://localhost:8080/user_info', {credentials: 'include'})
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          setUserInfo(data);
+        });
+
+    fetch('http://localhost:8080/events', {credentials: 'include'})
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          setEvents(data);
+        });
+}, []);
 
   return(
     <div>
-      <div>{message}</div>
-      
-    {people.map((person, index) => ( // grabs person in people array by index and displays
-      <div key ={index}>{person}</div>
-      ))}
+    <button className="button" onClick={() => window.location.href = 'http://localhost:8080/google/login'}>
+      Login with Google
+    </button>
+    
+    <button className="button" onClick={() => window.location.href = 'http://localhost:8080/logout'}>
+      Logout from Google
+    </button>
+    <hr></hr>
+    {userInfo && (
+            <div>
+                <img src={userInfo.picture} alt="User profile" />
+                <p>Welcome to P-reset, <strong>{userInfo.given_name}</strong>!</p>
+            </div>
+        )}
+    <hr></hr>
+    {events.length > 0 && (
+            <div>
+                <h2><strong>10 Upcoming Events</strong></h2>
+                <ul>
+                    {events.map(event => (
+                        <li key={event.id}>
+                            {event.summary}: <i>{new Date(event.start.dateTime || event.start.date).toLocaleString()}</i>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        )}
+    
+    <button className="button" onClick={() => window.location.href = "http://localhost:3000/add_event"}>Create Event</button>
     </div>
   );
 }
