@@ -52,11 +52,11 @@ const AddCalendar = ({Open}) => {
     };
   return (
     <div className=''>
-    <div className="w-full flex justify-center items-center">
+    <div className="fixed z-100 left-1/3 bg-purple-200 top-3">
       <form
         action={`/api/users/${user_id}/events`}
         method="POST"
-        className="p-5 h-full w-96 mt-8 flex items-start justify-center rounded-md border border-slate-700 flex-col gap-3"
+        className="p-3 h-full w-96 flex items-start justify-center rounded-md border border-slate-700 flex-col gap-3"
         onSubmit={handleSubmit}
       >
         <div className='flex justify-between w-full'>
@@ -103,31 +103,31 @@ const AddCalendar = ({Open}) => {
 
         <p className='text-slate-400 text-lg'>Select Occuring Days</p>
         <div className='flex gap-2 items-center'>
-          <input type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" 
+          <input type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" value="Monday" 
           name="days"/>
           <label className="ml-2 block text-sm text-gray-900">M</label>
 
-          <input type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" 
+          <input type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" value="Tuesday"
           name="days"/>
           <label className="ml-2 block text-sm text-gray-900">T</label>
 
-          <input type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" 
+          <input type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" value="Wednesday"
           name="days"/>
           <label className="ml-2 block text-sm text-gray-900">W</label>
 
-          <input type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" 
+          <input type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" value="Thursday"
            name="days"/>
           <label className="ml-2 block text-sm text-gray-900">TR</label>
 
-          <input type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+          <input type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" value="Friday"
            name="days" />
           <label className="ml-2 block text-sm text-gray-900">F</label>
 
-          <input type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" 
+          <input type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" value="Saturday"
            name="days"/>
           <label className="ml-2 block text-sm text-gray-900">S</label>
 
-          <input type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+          <input type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" value="Sunday"
            name="days" />
           <label className="ml-2 block text-sm text-gray-900">SU</label>
         </div>
@@ -152,7 +152,7 @@ const AddCalendar = ({Open}) => {
           <textarea
             placeholder="Add a description.."
             className="rounded-sm p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-slate-100 w-80"
-            rows={6}
+            rows={4}
             name="description"
           />
         </div>
@@ -167,10 +167,10 @@ const AddCalendar = ({Open}) => {
           />
       </div>
 
-      <div className='flex gap-2 items-center'>
+      {/* <div className='flex gap-2 items-center'>
         <FaUpload className='text-xl text-blue-700'/>
         <input type="file" name="file"/>
-      </div>
+      </div> */}
 
 
         <div className="flex">

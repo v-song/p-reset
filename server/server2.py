@@ -41,6 +41,21 @@ class Event(db.Model):
     frequency = db.Column(db.String(50))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
+    def serialize(self):
+        return {
+            'id': self.id,
+            'header': self.header,
+            'description': self.description,
+            'start_time': self.start_time.isoformat(),
+            'end_time': self.end_time.isoformat(),
+            'days': self.days,
+            'file': self.file,
+            'location': self.location,
+            'favorite': self.favorite,
+            'frequency': self.frequency,
+            'user_id': self.user_id
+        }
+
 class Journal(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     header = db.Column(db.String(50))
@@ -86,6 +101,7 @@ def events(user_id):
 
     elif request.method == 'GET':
         events = Event.query.filter_by(user_id=user_id).all()
+        print(events)
         return jsonify([event.serialize() for event in events])
     
 

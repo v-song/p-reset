@@ -46,7 +46,7 @@ const CreateButton = () => {
             {selectedOption === "Journal" ? (
                 <Journal Open={() => setSelectedOption(null)} />
             ) : selectedOption === "Event" ? (
-                <Calender Open={() => setSelectedOption(null)} />
+                <AddCalender Open={() => setSelectedOption(null)} />
             ) : null}
         </div>
     );

@@ -40,12 +40,12 @@ const Journal = ({Open}) => {
         .catch((error) => console.log(error));
     }
   return (
-    <div className="w-full flex justify-center items-center"> 
+    <div className="fixed left-1/3 bg-slate-400 z-100"> 
         <form
         action={`/api/users/${user_id}/journals`}
         method="POST"
         onSubmit={handleSubmit}
-        className="p-5 h-full w-96 mt-8 flex items-start justify-center rounded-md border border-slate-700 flex-col gap-3">
+        className="p-5 h-full w-96 flex items-start justify-center rounded-md border border-slate-700 flex-col gap-3">
           <div className='flex flex-col gap-5 justify-between w-full'>
           <div className='flex justify-between w-full'>
 
@@ -65,8 +65,7 @@ const Journal = ({Open}) => {
             required/>
         </div>
 
-        <div className='flex gap-2 items-center'>
-          <BsCalendarPlus className='text-xl text-blue-700'/>
+        <div className=''>
           <input
             type="datetime-local"
             name="journal_date"
