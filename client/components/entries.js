@@ -20,9 +20,9 @@ const Entries = () => {
   }, []);
 
   return (
-    <div>
-        <h1 className="text-2xl font-bold">My Journal Entries</h1>
-      <table className="table-auto w-50 my-4">
+    <div className='p-5'>
+        <h1 className="text-2xl font-bold text-center">Your Journal Entries</h1>
+      <table className="table-auto w-full my-4">
         <thead>
           <tr>
             <th className="border px-4 py-2">Title</th>

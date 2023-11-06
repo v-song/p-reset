@@ -104,7 +104,7 @@ def journals(user_id):
         db.session.commit()
         return jsonify({'message': 'Journal added successfully!'})
     elif request.method == 'GET':
-        journals = Journal.query.filter_by(user_id=user_id).order_by(Journal.datetime).all()
+        journals = Journal.query.filter_by(user_id=user_id).order_by(Journal.datetime.desc()).all()
         print(journals)
         return jsonify([journal.serialize() for journal in journals])
 

@@ -1,9 +1,9 @@
 import React from "react";
-import CreateButton from "@/components/CreateButton";
 import Navbar from "@/components/Navbar";
 import Entries from "@/components/Entries";
 import Head from "next/head";
-
+import Hero from "@/components/Hero";
+import Calender from "@/components/Calender";
 
 
 function MyComponent() {
@@ -15,7 +15,8 @@ function MyComponent() {
       <title>p-Reset: Self-Care App</title>
     </Head>
     <Navbar />
-    <CreateButton />
+    <Hero/>
+    <Calender/>
     <Entries/>
     </div>
   );
