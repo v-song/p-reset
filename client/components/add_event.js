@@ -43,7 +43,6 @@ function AddEvent() {
 
     return (
         <div>
-            <button className="button" onClick={() => window.location.href = "http://localhost:3000"}>Home</button>
 
             <h1><strong>Add Event</strong></h1>
             <div>
