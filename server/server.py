@@ -1,171 +1,149 @@
 # write flask code in python here
-from flask import Flask, jsonify, request, redirect, flash
+from flask import Flask, redirect, request, jsonify, session, make_response
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import Column, Integer, String, Boolean, ARRAY, Time, DateTime, ForeignKey
-from sqlalchemy.orm import relationship
-from datetime import time
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import Flow
+from googleapiclient.discovery import build
+from flask_session import Session
+from datetime import datetime
+from dotenv import load_dotenv
+import os
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+
+load_dotenv()
+
+app = Flask(__name__)
+CORS(app, origins=["http://localhost:3000", "http://localhost:3000/add_event"], supports_credentials=True)
+app.config['SESSION_COOKIE_SECURE'] = False
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+
+# Configure session to use filesystem
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_FILE_DIR'] = './.flask_session/'
+app.config['SESSION_PERMANENT'] = False
+app.config['SESSION_COOKIE_NAME'] = 'session'
+
+Session(app)
+
+app.secret_key = 'c085ce0c5c21a4d774591a20b981013e'
+
+CLIENT_ID = os.environ.get('CLIENT_ID', '00000')
+CLIENT_SECRET = os.environ.get('CLIENT_SECRET', '00000')
+REDIRECT_URI = 'http://localhost:8080/google/callback'
 
 
-app = Flask(__name__) 
-app.secret_key = 'unsafe'
+@app.route('/google/login', methods=['GET'])
+def google_login():
+    flow = Flow.from_client_config(
+        {
+            "web": {
+                "client_id": CLIENT_ID,
+                "client_secret": CLIENT_SECRET,
+                "redirect_uris": [REDIRECT_URI],
+                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                "token_uri": "https://accounts.google.com/o/oauth2/token",
+            }
+        },
+        scopes=["https://www.googleapis.com/auth/calendar", "https://www.googleapis.com/auth/userinfo.profile"],
+    )
 
-DATABASE_URL = 'postgresql://temp:temp@127.0.0.1:5432/journals'
-app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL  # need to set up database
-db = SQLAlchemy(app)
-CORS(app, resources={r"http://127.0.0.1:8080/add_entry": {"origins": "http://localhost:3000"}})
-CORS(app, resources={r"http://127.0.0.1:8080/get_entries": {"origins": "http://localhost:3000"}})
+    flow.redirect_uri = REDIRECT_URI
+    authorization_url, state = flow.authorization_url(prompt='consent', access_type='offline')
+    session['state'] = state
+    return redirect(authorization_url)
 
-
-# create engine
-engine = create_engine(DATABASE_URL)
-connection = engine.connect()
-
-# Define your "blank" table model
-Base = declarative_base()
-
-# Create a session to interact with the database
-Session = sessionmaker(bind=engine)
-session = Session()
-Base.metadata.create_all(engine)
-
-
-# make journalEntry through sqlAlchemy -- takes id, title, and content
-class JournalEntry(Base):
-    __tablename__ = 'all_entries'
-    id = Column(Integer, primary_key=True)
-    title = Column(String(50))
-    header = Column(String(500))
-    description = Column(String(500))
-    query = session.query_property()
-
-class User(Base):
-    __tablename__ = 'users'
-    id = Column(Integer, primary_key=True)
-    name = Column(String(50))
-    img_url = Column(String(500))
-    email = Column(String(500))
-    sms = Column(Integer)
-
-class Event(Base):
-    __tablename__ = 'events'
-    id = Column(Integer, primary_key=True)
-    header = Column(String(50))
-    description = Column(String(500))
-    start_time =  Column(Time)
-    end_time = Column(Time)
-    days = Column(ARRAY(String(50)))
-    file = Column(String(50))
-    location = Column(String(50))
-    favorite = Column(Boolean)
-    frequency = Column(String(50))
-    # user_id = Column(Integer, ForeignKey('users.id'))
-    # user = relationship('User', backref='events')
-
-class Journal(Base):
-    __tablename__ = 'journals'
-    id = Column(Integer, primary_key=True)
-    header = Column(String(50))
-    datetime = Column(DateTime)
-    description = Column(String(500))
-    user_id = Column(Integer, ForeignKey('users.id'))
-    user = relationship('User', backref='journals')
-
-
-# Create a new instance of the Blank model with the data you want to add
-# new_entry = JournalEntry(id=12113213, title="journal 1", content="this is my first journal entry")
-
-# Add the new instance to the session
-# session.add(new_entry)
-
-# Commit the changes to the database
-# session.commit()
-
-
-
-# new_user = User(id=1, name="p-ai", email="pai@gmail", sms=1234567890)
-# session.add(new_user)
-# session.commit()
-# users = session.query(User).all()
-
-
-# for row in users:
-#     print(f"ID: {row.id}, Name: {row.name}, Email: {row.email}")
-
-
-@app.route('/get_entries')
-def get_journals():
-    journals = JournalEntry.query.all()
-    response =jsonify([{'id': journal.id, 'title': journal.title, 'header': 
-                     journal.header, 'description': journal.description} for journal in journals])
-    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
-    response.headers.add('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
-    return response
-
-
-
-# make route for add netry endpoint
-@app.route('/add_entry', methods=['POST'])
-def add_entry():
-    if not request.is_json:
-        return jsonify({'error': 'Invalid request body'}), 400
+@app.route('/google/callback')
+def google_callback():
+    if 'state' not in session:
+        return "State value missing in session", 400
+    state = session['state']
+    flow = Flow.from_client_config(
+        {
+            "web": {
+                "client_id": CLIENT_ID,
+                "client_secret": CLIENT_SECRET,
+                "redirect_uris": [REDIRECT_URI],
+                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                "token_uri": "https://accounts.google.com/o/oauth2/token",
+            }
+        },
+        state=state,
+        scopes=["https://www.googleapis.com/auth/calendar", "https://www.googleapis.com/auth/userinfo.profile"],
+    )
+    flow.redirect_uri = REDIRECT_URI
+    authorization_response = request.url
+    flow.fetch_token(authorization_response=authorization_response)
+    credentials = flow.credentials
     
-    # Get the title and content from the form data
-    header = request.get_json().get('header')
+    session['credentials'] = {
+        'token': credentials.token,
+        'refresh_token': credentials.refresh_token,
+        'token_uri': credentials.token_uri,
+        'client_id': credentials.client_id,
+        'client_secret': credentials.client_secret,
+        'scopes': credentials.scopes,
+    }
 
-    description = request.get_json().get('description')
-    start_time = request.get_json().get('start_time')
-    [hour, minute, second] = start_time.split(":")
-    #start_time_obj = Time(hour, minute, second)
-    start_time_obj = time.fromisoformat(start_time)
-    end_time = request.get_json().get('end_time')
-    [hourE, minuteE, secondE] = end_time.split(":")
-    #end_time_obj = Ti me(hourE, minuteE, secondE)
-    end_time_obj = time.fromisoformat(end_time)
-    days = request.get_json().get('days')
-    file = request.get_json().get('file', '')
-    location = request.get_json().get('location', '')
-    frequency = request.get_json().get('frequency')
-    favorite = request.get_json().get('favorite', False)
-    # Create a new response object to send back to the client
-    response = jsonify({'message': 'added to database'})
-    # response.headers.add('Access-Control-Allow-Origin', '*')
-
-    # Create a new JournalEntry object with the form data
-    new_entry = Event(header=header, description=description, start_time=start_time_obj, end_time=end_time_obj, days=days, file=file, location=location, frequency=frequency, favorite=favorite, user_id=1)
-    # Add the new entry to the database session
-    db.session.add(new_entry)
-    db.session.commit()
-
-    # Redirect the user to the home page
-    return response
+    return redirect('http://localhost:3000')
 
 
-# make api requests
-@app.route("/api/home", methods=['GET'])
-def return_home():
-    return jsonify({
-        'message': "P-reset starter page!",
-        'people': ['Sumi', 'Vivien', 'Haram', 'Tara'
-                   'Angie', 'Abrar', 'Mohamed', 'Grace',
-                   'Sadhvi', 'Erin']
-    })
+@app.route('/user_info')
+def get_user_info():
+    #print(session)
+    credentials = session.get("credentials")
+    if not credentials:
+        return jsonify({"error": "Not authenticated"}), 401
+    
+    creds = Credentials(**credentials)
+    service = build('oauth2', 'v2', credentials=creds)
+    #print(credentials)
+    user_info = service.userinfo().get().execute()
+    
+    return jsonify(user_info)
 
-# make route for api/journal endpoint
-@app.route("/api/journal", methods=['POST'])
-def add_journal_entry():
-    data = request.get_json()
-    title = data['title']
-    content = data['content']
-    entry = JournalEntry(title=title, content=content)
-    db.session.commit()
-    # db.session.add(entry)
-    db.session.commit()
-    return 'added to database'
+@app.route('/events', methods=['GET'])
+def get_events():
+    credentials = session.get('credentials')
+    if not credentials:
+        return jsonify({"error": "Not authenticated"}), 401
+
+    creds = Credentials(**credentials)
+    service = build('calendar', 'v3', credentials=creds)
+
+    # Get the current time in RFC3339 format
+    now = datetime.utcnow().isoformat() + 'Z'
+
+    events_result = service.events().list(calendarId='primary', timeMin=now,
+                                              maxResults=50, singleEvents=True,
+                                              orderBy='startTime').execute()
+    events = events_result.get('items', [])
+    
+    return jsonify(events)
+
+@app.route('/add_event', methods=['POST'])
+def add_event():
+    credentials = session.get('credentials')
+    if not credentials:
+        return jsonify({"error": "Not authenticated"}), 401
+
+    creds = Credentials(**credentials)
+    service = build('calendar', 'v3', credentials=creds)
+    
+    event_body = request.json
+    try:
+        event = service.events().insert(calendarId='primary', body=event_body).execute()
+        return jsonify(event)
+    except Exception as e:
+        # Logging the exception
+        print(f"An error occurred: {e}")
+        return jsonify({"error": "Failed to add event", "details": str(e)}), 500
+
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    session.pop('credentials', None)
+    return redirect('http://localhost:3000')
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=8080)
