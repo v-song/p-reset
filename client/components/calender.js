@@ -1,56 +1,81 @@
-import React from 'react'
+import React from "react";
+import Navbar from "@/components/Navbar";
+import Entries from "@/components/entries";
+import Head from "next/head";
+import Hero from "@/components/Hero";
+import Calender from "@/components/calender";
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import AddEvent from "@/components/add_event";
 import { useState, useEffect } from "react";
 
-const Calender = () => {
-    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const hoursOfDay = ['12am', '1am', '2am', '3am', '4am', '5am', '6am', '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm', '8pm', '9pm', '10pm', '11pm'];
 
-    const user_id = 2
-    const  [events, setEvents] = useState([])
-    useEffect(() => {
-        fetch(`http://127.0.0.1:5000/api/users/${user_id}/events`,{
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-          .then(response => response.json())
-          .then(data => setEvents(data))
-            .then(console.log(events))
-          .catch(error => console.error(error));
-      }, []);
+function MyComponent() {
+  const [userInfo, setUserInfo] = useState(null);
+  const [events, setEvents] = useState([]);
+  const calendarEvents = Array.isArray(events) ? 
+  events.map(event => ({
+    title: event.summary,
+    start: new Date(event.start.dateTime),
+    end: new Date(event.end.dateTime),
+  })) : [];
+
+  useEffect(() => {
+    fetch('http://localhost:8080/user_info', {credentials: 'include'})
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          setUserInfo(data);
+        });
+
+    fetch('http://localhost:8080/events', {credentials: 'include'})
+        .then(response => response.json())
+        .then(data => {
+          console.log("now printing")
+          console.log(data);
+          setEvents(data);
+        });
+}, []);
+
+  return (
+   <div>
+
     
-
-    
-
-    return (
-        <div className='p-5'>
-            <h1 className="text-2xl font-bold text-center mb-5">Your Upcoming Week</h1>
-            <div className="grid grid-cols-7">
-                {daysOfWeek.map(day => (
-                    <div key={day} className="border border-black">
-                        <h3 className="font-bold text-center">{day}</h3>
-                        {hoursOfDay.map(hour => (
-                            <div key={`${day}-${hour}`} className="border border-black p-1">
-                                {hour}
-                            </div>
-                        ))}
-                    </div>
-                ))}
+    {/* {userInfo && (
+            <div>
+                <img src={userInfo.picture} alt="User profile" />
+                <p>Welcome to P-reset, <strong>{userInfo.given_name}</strong>!</p>
             </div>
-            {events.map(event => {
-                  return (
-                        <div key={event.id}>
-                            <p>{event.header}</p>
-                            <p>{event.description}</p>
-                            <p>{event.start_time}</p>
-                            <p>{event.end_time}</p>
-                            <p>{event.days}</p>
-                        </div>
-                    )
-                })}
-        </div>
-    )
+        )} */}
+    {/* {events.length > 0 && (
+            <div>
+                <h2><strong>10 Upcoming Events</strong></h2>
+                <ul>
+                    {events.map(event => (
+                        <li key={event.id}>
+                            {event.summary}: <i>{new Date(event.start.dateTime || event.start.date).toLocaleString()}</i>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        )} */}
+    <div className="flex h-screen ">
+  {/* Calendar Section */}
+  <div className="w-3/5 -mt-5" >
+    <FullCalendar
+      plugins={[dayGridPlugin]}
+      initialView="dayGridMonth"
+      events={calendarEvents}
+    />
+  </div>
+
+  {/* Right Side Section for Button and Form */}
+  
+</div>
+
+    </div>
+
+  );
 }
 
-export default Calender
+export default MyComponent;

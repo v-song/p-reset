@@ -9,6 +9,13 @@ function Navbar() {
                 <h1 className="text-2xl font-extrabold"> p-reset</h1>
             </div>
             <div className="flex gap-5 p-5 items-center">
+            <button class="button" onClick={() => window.location.href = 'http://localhost:8080/google/login'}>
+            Login with Google
+            </button>
+            
+            <button class="button" onClick={() => window.location.href = 'http://localhost:8080/logout'}>
+            Logout from Google
+            </button>
                 <FaCalendarAlt />
                 <FaUser/>
                 <CreateButton />
