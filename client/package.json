@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fullcalendar/daygrid": "^6.1.9",
+    "@fullcalendar/react": "^6.1.9",
+    "fullcalendar": "^6.1.9",
     "next": "^13.5.4",
     "next-auth": "^4.23.2",
     "react": "^18.2.0",
