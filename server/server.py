@@ -20,16 +20,19 @@ class PushSubscription(db.Model):
 db.create_all()
 
 
-@app.route("/register")
-def home_page():
-    return render_template("index.html")
+# @app.route("/register")
+# def home_page():
+#     return render_template("index.html")
 
 # make api requests
+
+
+
 @app.route("/api/home", methods=['GET'])
 def return_home():
     return jsonify({
         'message': "P-reset starter page!",
-        'people': ['Sumi', 'Vivien', 'Haram', 'Tara'
+        'people': ['Sumi', 'Vivien', 'Haram', 'Tara',
                    'Angie', 'Abrar', 'Mohamed', 'Grace',
                    'Sadhvi', 'Erin']
     })
@@ -50,6 +53,9 @@ def create_push_subscription():
         "status": "success"
     })
 
+@app.route("/admin")
+def admin_page():
+    return render_template("admin.html")
 
 if __name__ == "__main__":
     app.run(debug=True, port=8080)

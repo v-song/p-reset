@@ -2,7 +2,9 @@ import React, { useEffect } from "react";
 import { registerServiceWorker } from "@/utils/registerServiceWorker";
 
 const NotificationButton = () => {
-  const publicVapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+
+//   const publicVapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+  
   const handleClick = () => {
     const serviceWorkerUrl = "/service_worker.js";
     const applicationServerPublicKey =

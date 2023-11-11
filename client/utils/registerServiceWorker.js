@@ -63,6 +63,7 @@ function subscribeUser(
     });
 }
 
+// asks user for explicit permission
 function askPermission() {
   return new Promise(function (resolve, reject) {
     const permissionResult = Notification.requestPermission(function (result) {
@@ -79,6 +80,8 @@ function askPermission() {
   });
 }
 
+// registers service worker + subscribes user after asking for permission
+// want to eventually separate these two
 export function registerServiceWorker(
   serviceWorkerUrl,
   applicationServerPublicKey,
@@ -93,9 +96,7 @@ export function registerServiceWorker(
       .then(function (swReg) {
         console.log("Service Worker is registered", swReg);
 
-        askPermission().then(() => {
-          subscribeUser(swReg, applicationServerPublicKey, apiEndpoint);
-        });
+        subscribeUser(swReg, applicationServerPublicKey, apiEndpoint);
 
         swRegistration = swReg;
       })
