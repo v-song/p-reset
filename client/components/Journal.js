@@ -40,7 +40,7 @@ const Journal = ({Open}) => {
         .catch((error) => console.log(error));
     }
   return (
-    <div className="fixed left-1/3 bg-slate-400 z-100"> 
+    <div className=" bg-slate-400"> 
         <form
         action={`/api/users/${user_id}/journals`}
         method="POST"

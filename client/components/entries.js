@@ -19,7 +19,7 @@ const Entries = () => {
   }, []);
 
   return (
-    <div className='p-5'>
+    <div className='p-5 w-full'>
         <h1 className="text-2xl font-bold text-center">Your Journal Entries</h1>
       <table className="table-auto w-full my-4">
         <thead>

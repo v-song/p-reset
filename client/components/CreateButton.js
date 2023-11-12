@@ -4,6 +4,7 @@ import AddCalender from './AddCalender';
 import Journal from './Journal';
 import {BsCalendarPlus} from 'react-icons/bs'
 import {MdOutlineArrowDropDown} from 'react-icons/md'
+import Link from 'next/link'
 
 
 const CreateButton = () => {
@@ -22,24 +23,35 @@ const CreateButton = () => {
                 onClick={() => setIsOpen(!isOpen)}
             >
                 <BsCalendarPlus className="inline-block mr-2" />
-                Create
+                Explore
                 <MdOutlineArrowDropDown className="inline-block ml-2 text-2xl" />
             </button>
 
             {isOpen && (
                 <div className="absolute z-10 ml-5 w-32 bg-white shadow-xl">
+                    <Link href="/journals">
                     <button
                         className="block px-4 pt-2 w-full  text-gray-800 hover:border-b-2 hover:border-sky-400 hover:text-gray-900"
-                        onClick={() => handleOptionClick("Journal")}
                     >
                         Journal
                     </button>
+                    </Link>
+                    <Link href="/calender">
                     <button
+                    
                         className="block px-4 pt-2 w-full  text-gray-800 hover:border-b-2 hover:border-sky-400 hover:text-gray-900"
-                        onClick={() => handleOptionClick("Event")}
                     >
                         Event
                     </button>
+                    </Link>
+                    <Link href="/habits">
+                    <button
+                    
+                        className="block px-4 pt-2 w-full  text-gray-800 hover:border-b-2 hover:border-sky-400 hover:text-gray-900"
+                    >
+                        Habits
+                    </button>
+                    </Link>
                 </div>
             )}
 
@@ -47,6 +59,8 @@ const CreateButton = () => {
                 <Journal Open={() => setSelectedOption(null)} />
             ) : selectedOption === "Event" ? (
                 <AddCalender Open={() => setSelectedOption(null)} />
+            ) : selectedOption === "Habits" ? (
+                <AddHabits Open={() => setSelectedOption(null)} />
             ) : null}
         </div>
     );

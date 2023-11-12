@@ -1,19 +1,15 @@
 import React from "react";
-import Navbar from "@/components/Navbar";
-import Entries from "@/components/entries";
-import Head from "next/head";
-import Hero from "@/components/Hero";
-import Calender from "@/components/calender";
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import AddEvent from "@/components/add_event";
 import { useState, useEffect } from "react";
+import AddCalendar from "./AddCalender";
 
 
-function MyComponent() {
+function Calendar() {
   const [userInfo, setUserInfo] = useState(null);
   const [events, setEvents] = useState([]);
-  const calendarEvents = Array.isArray(events) ? 
+  const   calendarEvents = Array.isArray(events) ? 
   events.map(event => ({
     title: event.summary,
     start: new Date(event.start.dateTime),
@@ -38,7 +34,7 @@ function MyComponent() {
 }, []);
 
   return (
-   <div>
+   <div className="flex justify-between gap-4 m-5">
 
     
     {/* {userInfo && (
@@ -59,23 +55,25 @@ function MyComponent() {
                 </ul>
             </div>
         )} */}
-    <div className="flex h-screen ">
+    <div className="flex w-full m-5">
   {/* Calendar Section */}
-  <div className="w-3/5 -mt-5" >
+  <div className="w-full mb-8" >
     <FullCalendar
       plugins={[dayGridPlugin]}
       initialView="dayGridMonth"
       events={calendarEvents}
     />
   </div>
-
+ 
   {/* Right Side Section for Button and Form */}
   
 </div>
 
+
+    <AddCalendar/>
     </div>
 
   );
 }
 
-export default MyComponent;
+export default Calendar;

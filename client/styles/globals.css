@@ -70,12 +70,6 @@ textarea {
     min-height: 100px; /* Minimum height for the textarea */
 }
 
-div {
-    margin-left: 5px;
-    margin-top: 10px;
-    margin-bottom: 5px;
-    margin-right: 10px;
-}
 
 hr {
     margin-top: 10px;

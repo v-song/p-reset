@@ -51,8 +51,7 @@ const AddCalendar = ({Open}) => {
         .catch((error) => console.log(error));
     };
   return (
-    <div className=''>
-    <div className="fixed z-100 left-1/3 bg-purple-200 top-3">
+    <div className="bg-purple-200">
       <form
         action={`/api/users/${user_id}/events`}
         method="POST"
@@ -60,7 +59,7 @@ const AddCalendar = ({Open}) => {
         onSubmit={handleSubmit}
       >
         <div className='flex justify-between w-full'>
-          <div className="text-xl font-bold text-slate-600">Add a task</div>
+          <div className="text-xl font-bold text-slate-600">Add a Calender Event</div>
           <button type="button" onClick={()=>setIsFavorite(!isFavorite)}>
               {
                 isFavorite ? <AiFillStar className='text-yellow-500 text-2xl'/> : <AiOutlineStar className='text-yellow-500 text-2xl'/>
@@ -175,15 +174,6 @@ const AddCalendar = ({Open}) => {
 
         <div className="flex">
           <button
-            type="button"
-            tabIndex={0}
-            className="mt-3 w-24 rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 hover:scale-95 ml-3"
-            onClick={() => Open()}
-          >
-            Cancel
-          </button>
-
-          <button
             type="submit"
             tabIndex={0}
             className="mt-3 w-24 rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-500 text-base font-medium text-white hover:bg-blue-600 hover:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ml-3 "
@@ -197,7 +187,6 @@ const AddCalendar = ({Open}) => {
     <div/>
 
     </div>
-  </div>
   )
 }
 
