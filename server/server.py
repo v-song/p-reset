@@ -44,7 +44,7 @@ def google_login():
                 "token_uri": "https://accounts.google.com/o/oauth2/token",
             }
         },
-        scopes=["https://www.googleapis.com/auth/calendar", "https://www.googleapis.com/auth/userinfo.profile"],
+        scopes=["https://www.googleapis.com/auth/calendar", "https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"],
     )
 
     flow.redirect_uri = REDIRECT_URI
@@ -68,7 +68,7 @@ def google_callback():
             }
         },
         state=state,
-        scopes=["https://www.googleapis.com/auth/calendar", "https://www.googleapis.com/auth/userinfo.profile"],
+        scopes=["https://www.googleapis.com/auth/calendar", "https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"],
     )
     flow.redirect_uri = REDIRECT_URI
     authorization_response = request.url

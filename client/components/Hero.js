@@ -1,6 +1,41 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
 
 const Hero = () => {
+
+    const [userInfo, setUserInfo] = useState(null);  
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+    useEffect(() => {
+        fetch('http://localhost:8080/user_info', {credentials: 'include'})
+            .then(response => response.json())
+            .then(data => {
+            console.log(data);
+            setUserInfo(data);
+            });
+    }, []);
+
+    useEffect(() => {
+        checkAuthentication();
+    }, []);
+
+    const checkAuthentication = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/user_info', {
+                method: 'GET',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                setIsAuthenticated(true);
+            } else {
+                throw new Error('Not authenticated');
+            }
+        } catch (error) {
+            setIsAuthenticated(false);
+        }
+    };
+
+    
     const insights = [
         {
             title: 'Accomplishments',
@@ -11,7 +46,7 @@ const Hero = () => {
             ],
         },
         {
-            title: 'Future Goals',
+            title: 'Future Tasks',
             items: [
                 'Launch new product by end of year',
                 'Expand into new markets',
@@ -30,11 +65,14 @@ const Hero = () => {
 
     return (
         <div className='p-5 bg-green-300 flex justify-evenly'> 
-            <div className=''>
-                <h1 className='text-4xl font-bold p-2'>Welcome back, User !!!</h1>
-                <p className='w-96'> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                </p>
-            </div>
+            
+            {isAuthenticated ? (
+                    <div className=''>
+                        <h1 className='text-left text-4xl font-bold p-2'>Welcome back, {userInfo.given_name} !!!</h1>
+                        <p className='w-96 '> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </p>
+                    </div>
+                ) : (null)}
 
             <div className=''>
                 <h1 className='text-xl font-bold'>Your Insights</h1>
