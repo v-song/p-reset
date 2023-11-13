@@ -1,12 +1,14 @@
 import React from 'react'
-import {BsCalendarPlus} from 'react-icons/bs'
 import { useState } from "react";
 import {AiOutlineStar} from 'react-icons/ai'
 import {AiFillStar} from 'react-icons/ai'
+import { useRouter } from "next/router";
 
-const Journal = ({Open}) => {
+const Journal = () => {
     const [isFavorite, setIsFavorite] = useState(false);
-    const user_id = 2
+    const [isLoaded, setIsLoaded] = useState(false);
+    const router = useRouter();
+    const { id } = router.query;
 
     const handleSubmit = async(event) => {
       event.preventDefault();
@@ -15,10 +17,10 @@ const Journal = ({Open}) => {
       const description = formData.get("description");
       const datetime = formData.get("journal_date");;
       // const file = formData.get("file");
-      const data = { header, description, datetime, isFavorite };
-      // const jsonData = JSON.stringify(data);
+      const data = { header, description, datetime, isFavorite};
       console.log(data);
-      await fetch(`http://127.0.0.1:5000/api/users/${user_id}/journals`, {
+      console.log(id)
+      await fetch(`http://localhost:8080/api/users/${id}/journals`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
@@ -33,16 +35,16 @@ const Journal = ({Open}) => {
         })
         .then((data) => {
             console.log(data);
-            Open();
             setIsFavorite(false);
             alert("Journal added successfully!");
+            location.reload();
         })
         .catch((error) => console.log(error));
     }
   return (
     <div className=" bg-slate-400"> 
         <form
-        action={`/api/users/${user_id}/journals`}
+        action={`/api/users/${id}/journals`}
         method="POST"
         onSubmit={handleSubmit}
         className="p-5 h-full w-96 flex items-start justify-center rounded-md border border-slate-700 flex-col gap-3">
@@ -85,15 +87,6 @@ const Journal = ({Open}) => {
         </div>
 
         <div className="flex">
-          <button
-            type="button"
-            tabIndex={0}
-            className="mt-3 w-24 rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 hover:scale-95 ml-3"
-            onClick={() => Open()}
-          >
-            Cancel
-          </button>
-
           <button
             type="submit"
             tabIndex={0}

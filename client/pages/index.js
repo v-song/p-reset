@@ -1,9 +1,9 @@
 import React from "react";
 import Navbar from "@/components/Navbar";
-import Entries from "@/components/entries";
+import Entries from "@/components/Entries";
 import Head from "next/head";
 import Hero from "@/components/Hero";
-import Calender from "@/components/calender";
+import Calender from "@/components/Calender";
 
 
 function MyComponent() {

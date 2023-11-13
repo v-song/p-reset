@@ -3,10 +3,9 @@ import { useState } from "react";
 import {ImLocation} from 'react-icons/im'
 import {AiOutlineStar} from 'react-icons/ai'
 import {AiFillStar} from 'react-icons/ai'
-import {FaUpload} from 'react-icons/fa'
 import {BiSolidTimeFive} from 'react-icons/bi'
 
-const AddCalendar = ({Open}) => {
+const AddCalendar = () => {
 
     const [isFavorite, setIsFavorite] = useState(false);
     const user_id = 2

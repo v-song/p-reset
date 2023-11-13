@@ -69,8 +69,11 @@ const Hero = () => {
             {isAuthenticated ? (
                     <div className=''>
                         <h1 className='text-left text-4xl font-bold p-2'>Welcome back, {userInfo.given_name} !!!</h1>
+                        <div className="flex gap-2">
                         <p className='w-96 '> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                         </p>
+                        <img className= "w-32 h-32 object-cover rounded-full border-2 border-gray-300" src={userInfo.picture} alt="User profile"/>
+                        </div>
                     </div>
                 ) : (null)}
 

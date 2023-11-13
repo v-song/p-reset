@@ -57,7 +57,7 @@ function Calendar() {
         )} */}
     <div className="flex w-full m-5">
   {/* Calendar Section */}
-  <div className="w-full mb-8" >
+  <div className="w-full mb-8 z-1" >
     <FullCalendar
       plugins={[dayGridPlugin]}
       initialView="dayGridMonth"

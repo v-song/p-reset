@@ -1,11 +1,12 @@
 # write flask code in python here
 from flask import Flask, redirect, request, jsonify, session, make_response
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
+from datetime import datetime, time
+from flask_sqlalchemy import SQLAlchemy
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
 from flask_session import Session
-from datetime import datetime
 from dotenv import load_dotenv
 import os
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
@@ -22,6 +23,44 @@ app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_FILE_DIR'] = './.flask_session/'
 app.config['SESSION_PERMANENT'] = False
 app.config['SESSION_COOKIE_NAME'] = 'session'
+# Configure the app to connect to the PostgreSQL database using SQLAlchemy
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://haramyoon:password123@p-reset.cyjuijxbcgyl.us-east-2.rds.amazonaws.com/preset'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Create a SQLAlchemy instance
+db = SQLAlchemy(app)
+app.app_context().push()
+
+class Users(db.Model):
+    id = db.Column(db.String, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(50), unique=True)
+    img_url = db.Column(db.String(500))
+    sms = db.Column(db.Integer)
+    journals = db.relationship('Journal', backref='users', lazy=True)
+
+class Journal(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    header = db.Column(db.String(50))
+    description = db.Column(db.String(500))
+    datetime =  db.Column(db.DateTime)
+    file = db.Column(db.String(50))
+    favorite = db.Column(db.Boolean)
+    user_id = db.Column(db.String, db.ForeignKey('users.id'), nullable=False)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'header': self.header,
+            'description': self.description,
+            'datetime': self.datetime.isoformat(),
+            'file': self.file,
+            'favorite': self.favorite,
+            'user_id': self.user_id
+        }
+
+# Create the Users and Event tables in the database using SQLAlchemy's create_all() method
+db.create_all()
 
 Session(app)
 
@@ -98,6 +137,20 @@ def get_user_info():
     service = build('oauth2', 'v2', credentials=creds)
     #print(credentials)
     user_info = service.userinfo().get().execute()
+
+    user_id = user_info['id']
+    user = Users.query.get(user_id)
+    if user is None:
+        # Users doesn't exist, create it
+        new_user = Users(
+            id=user_id,
+            name=f"{user_info['given_name']} {user_info['family_name']}",
+            img_url=user_info['picture']
+        )
+        print(new_user)
+        db.session.add(new_user)
+        db.session.commit()
+    
     
     return jsonify(user_info)
 
@@ -143,6 +196,33 @@ def add_event():
 def logout():
     session.pop('credentials', None)
     return redirect('http://localhost:3000')
+
+
+
+@app.route('/api/users/<user_id>/journals', methods=['POST', 'GET'])
+@cross_origin()
+def journals(user_id):
+    if request.method == 'POST':
+        data = request.get_json()
+        journal = Journal(header=data['header'],
+                    description=data['description'],
+                    datetime=datetime.strptime(data['datetime'], "%Y-%m-%dT%H:%M"),
+                    file=data.get('file', ''),
+                    favorite=data['isFavorite'],
+                    user_id=user_id)
+        db.session.add(journal)
+        db.session.commit()
+        return jsonify({'message': 'Journal added successfully!'})
+    elif request.method == 'GET':
+        journals = Journal.query.filter_by(user_id=user_id).order_by(Journal.datetime.desc()).all()
+        return jsonify([journal.serialize() for journal in journals])
+
+# Write a print statement to show the users within the user 
+print("server side working !!! :)")
+users = Users.query.all()
+for user in users:
+    print(user.name)
+
 
 
 if __name__ == "__main__":
