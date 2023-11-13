@@ -1,7 +1,7 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from pywebpush import webpush, WebPushException
 from datetime import datetime
-from models import db, Habit, PushSubscription
+from server import db, Habit, PushSubscription
 import pytz
 import json
 
