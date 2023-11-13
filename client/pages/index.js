@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import NotificationButton from "@/components/notification-button";
+import HabitForm from "@/components/habit-form";
 
 function index() {
   const [message, setMessage] = useState("Loading"); // set state variable
@@ -25,6 +26,7 @@ function index() {
   return (
     <div>
       <NotificationButton />
+      <HabitForm />
       <div>{message}</div>
 
       {people.map(
