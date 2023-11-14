@@ -1,7 +1,7 @@
 import React from 'react'
 import Entries from '@/components/Entries'
 import Navbar from '@/components/Navbar'
-import Journal from '@/components/Journal'
+import Journal from '@/components/forms/Journal'
 
 const Journals = () => {
   return (

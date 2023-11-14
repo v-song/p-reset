@@ -3,7 +3,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import AddEvent from "@/components/add_event";
 import { useState, useEffect } from "react";
-import AddCalendar from "./AddCalender";
+import AddCalendar from "./forms/AddCalender";
 
 
 function Calendar() {
@@ -27,7 +27,6 @@ function Calendar() {
     fetch('http://localhost:8080/events', {credentials: 'include'})
         .then(response => response.json())
         .then(data => {
-          console.log("now printing")
           console.log(data);
           setEvents(data);
         });

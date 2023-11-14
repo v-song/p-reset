@@ -13,7 +13,7 @@ const Entries = () => {
     if (!id) return;
     fetch(`http://localhost:8080/api/users/${id}/journals`,{
       method: 'GET',
-      headers: {
+      headers: {  
         'Content-Type': 'application/json'
       }
     })
@@ -29,6 +29,33 @@ const Entries = () => {
     alert(`Title: ${header}\nDescription: ${description}\nDatetime: ${datetime}`);
   }
 
+  const del = (journal_id) => {
+    console.log(journal_id)
+    fetch(`http://localhost:8080/api/journals/${journal_id}`,{
+      method: 'DELETE',
+      headers: {  
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .then(()=>location.reload())
+      .catch(error => console.error(error));
+  }
+
+  const favorite = (journal_id, currentFavoriteState) => {
+    fetch(`http://localhost:8080/api/journals/${journal_id}`,{
+      method: 'PATCH',
+      headers: {  
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        favorite: !currentFavoriteState
+      })
+    })
+    .then(()=>location.reload())
+    .catch(error => console.error(error));
+  }
 
   return (
     <div className='p-5 w-full'>
@@ -48,18 +75,21 @@ const Entries = () => {
         {journals.map(journal => {
           const [date, time] = journal.datetime.split("T");
           return (
-            <tr key={journal.id} className='hover:bg-slate-300' onClick={()=>openModal(journal)}>
-              <td className="border px-4 py-2 text-center">{journal.header}</td>
+            <tr key={journal.id} className='hover:bg-slate-300' >
+              <td className="border px-4 py-2 text-center"
+              onClick={()=>openModal(journal)}>{journal.header}</td>
               {/* <td className="border px-4 py-2">{journal.description}</td> */}
-              <td className="border px-4 py-2 text-center">{date}</td>
-              <td className="border px-4 py-2 text-center">{time}</td>
-              <td className='border px-4 py-2 text-yellow-500 text-2xl w-5 hover:scale-110 hover:text-yellow-400'>
+              <td className="border px-4 py-2 text-center"
+              onClick={()=>openModal(journal)}>{date}</td>
+              <td className="border px-4 py-2 text-center"
+              onClick={()=>openModal(journal)}>{time}</td>
+              <td className='border px-4 py-2 text-yellow-500 text-2xl w-5 hover:scale-110 hover:text-yellow-400' onClick={()=>favorite(journal.id, journal.favorite)}>
                 {
-                  journal.isFavorite ? <AiFillStar/> : <AiOutlineStar/>
+                  journal.favorite ? <AiFillStar/> : <AiOutlineStar/>
                 }
               </td>
-              <td className='border px-4 py-2 text-center text-red-300 text-2xl w-5 hover:translate-x-1 transition-transform duration-200 hover:text-red-600'>
-                <BsTrash3Fill/>
+              <td className='border px-4 py-2 text-center text-red-300 text-2xl w-5 hover:translate-x-1 transition-transform duration-200 hover:text-red-600' onClick={()=>del(journal.id)}>
+                <BsTrash3Fill />
               </td>
             </tr>
           );

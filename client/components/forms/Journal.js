@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 
 const Journal = () => {
     const [isFavorite, setIsFavorite] = useState(false);
-    const [isLoaded, setIsLoaded] = useState(false);
     const router = useRouter();
     const { id } = router.query;
 

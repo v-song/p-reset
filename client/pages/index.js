@@ -1,6 +1,5 @@
 import React from "react";
 import Navbar from "@/components/Navbar";
-import Entries from "@/components/Entries";
 import Head from "next/head";
 import Hero from "@/components/Hero";
 import Calender from "@/components/Calender";
@@ -16,7 +15,6 @@ function MyComponent() {
     <Navbar />
     <Hero/>
     <Calender/>
-    <Entries/>
     </div>
   )
 }
