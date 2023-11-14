@@ -38,6 +38,29 @@ class Users(db.Model):
     img_url = db.Column(db.String(500))
     sms = db.Column(db.Integer)
     journals = db.relationship('Journal', backref='users', lazy=True)
+    habits = db.relationship('Habit', backref='users', lazy=True)
+
+class Habit(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    description = db.Column(db.String(500))
+    completed = db.Column(db.Boolean)
+    days = db.Column(db.ARRAY(db.String(50)))
+    frequency = db.Column(db.Integer)
+    favorite = db.Column(db.Boolean)
+    user_id = db.Column(db.String, db.ForeignKey('users.id'), nullable=False)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'completed': self.completed,
+            'days': self.days,
+            'frequency': self.frequency,
+            'favorite': self.favorite,
+            'user_id': self.user_id
+        }
 
 class Journal(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -217,11 +240,44 @@ def journals(user_id):
         journals = Journal.query.filter_by(user_id=user_id).order_by(Journal.datetime.desc()).all()
         return jsonify([journal.serialize() for journal in journals])
 
+@app.route('/api/journals/<journal_id>', methods=['PATCH', 'DELETE'])
+@cross_origin()
+def journal(journal_id):
+    journal = Journal.query.get(journal_id)
+    if request.method == 'PATCH':
+        data = request.get_json()
+        journal.favorite = data['favorite']
+        db.session.commit()
+        return jsonify({'message': 'Journal updated successfully!'})
+    elif request.method == 'DELETE':
+        db.session.delete(journal)
+        db.session.commit()
+        return jsonify({'message': 'Journal deleted successfully!'})
+    
+@app.route('/api/users/<user_id>/habits', methods=['POST', 'GET'])
+@cross_origin()
+def habits(user_id):
+    if request.method == 'POST':
+        data = request.get_json()
+        habit = Habit(name=data['name'],
+                    description=data['description'],
+                    completed=False,
+                    days=data['days'],
+                    frequency=data['frequency'],
+                    favorite=data['isFavorite'],
+                    user_id=user_id)
+        db.session.add(habit)
+        db.session.commit()
+        return jsonify({'message': 'Habit added successfully!'})
+    elif request.method == 'GET':
+        habits = Habit.query.filter_by(user_id=user_id).all()
+        return jsonify([habit.serialize() for habit in habits])
+
 # Write a print statement to show the users within the user 
 print("server side working !!! :)")
 users = Users.query.all()
 for user in users:
-    print(user.name)
+    print(user.email)
 
 
 
