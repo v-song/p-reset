@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import AddCalendar from "./forms/AddCalender";
 
 
+
 function Calendar() {
   const [userInfo, setUserInfo] = useState(null);
   const [events, setEvents] = useState([]);
@@ -69,7 +70,7 @@ function Calendar() {
 </div>
 
 
-    <AddCalendar/>
+    <AddEvent/>
     </div>
 
   );
