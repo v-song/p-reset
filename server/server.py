@@ -18,6 +18,7 @@ app.config.from_pyfile('application.cfg.py')
 CORS(app)
 
 vapid_private_key = app.config['VAPID_PRIVATE_KEY']
+vapid_claim = app.config["VAPID_CLAIM_EMAIL"]
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:zhou@localhost/test"
@@ -114,7 +115,7 @@ def send_notifications():
                         subscription_info=subscription_info,
                         data=json.dumps({"title": "Habit Reminder", "body": habit.name}),
                         vapid_private_key=vapid_private_key,
-                        vapid_claims={"sub": "angiezhou.az@gmail.com"}
+                        vapid_claims={"sub": "mailto:angiezhou.az@gmail.com"}
                     )
                 except WebPushException as e:
                     print(f"Web push failed: {e}")
