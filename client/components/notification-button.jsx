@@ -5,6 +5,7 @@ const NotificationButton = () => {
 
 //   const publicVapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
   
+// TODO: remove hard coded public key
   const handleClick = () => {
     const serviceWorkerUrl = "/service_worker.js";
     const applicationServerPublicKey =

@@ -1,56 +1,64 @@
 import React, { useState } from "react";
 
-export const HabitForm = () => {
-  const [habit, setHabit] = useState("");
-  const [time, setTime] = useState("");
+function HabitForm() {
+  const [habitName, setHabitName] = useState("");
+  const [habitTime, setHabitTime] = useState("");
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-    // Data to be sent to the Flask backend
+    // Prepare the data to be sent
     const habitData = {
-      habitName: habit,
-      notificationTime: time,
+      name: habitName,
+      time: habitTime,
     };
 
-    try {
-      const response = await fetch("http://localhost:8080/add-habit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // Include other headers as necessary, like authentication tokens
-        },
-        body: JSON.stringify(habitData), // Convert the habit data to a JSON string
+    // Sending the POST request to the Flask API
+    fetch("http://localhost:8080/api/users/1/habits", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(habitData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        // Clear the form
+        setHabitName("");
+        setHabitTime("");
+      })
+      .catch((error) => {
+        console.error("Error adding habit:", error);
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const responseData = await response.json();
-      console.log("Success:", responseData);
-    } catch (error) {
-      console.error("Error:", error);
-    }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={habit}
-        onChange={(e) => setHabit(e.target.value)}
-        placeholder="Habit"
-      />
-      <input
-        type="time"
-        value={time}
-        onChange={(e) => setTime(e.target.value)}
-        placeholder="Time"
-      />
-      <button type="submit">Add Habit</button>
-    </form>
+    <div>
+      <h2>Add a New Habit</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Habit Name:</label>
+          <input
+            type="text"
+            value={habitName}
+            onChange={(e) => setHabitName(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Habit Time:</label>
+          <input
+            type="time"
+            value={habitTime}
+            onChange={(e) => setHabitTime(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit">Add Habit</button>
+      </form>
+    </div>
   );
-};
+}
 
 export default HabitForm;
