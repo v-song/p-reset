@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@daypilot/daypilot-lite-react": "^3.18.0",
     "dayjs": "^1.11.10",
     "flask": "^0.2.10",
     "react-icons": "^4.11.0"

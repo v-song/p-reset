@@ -1,7 +1,7 @@
 # write flask code in python here
 from flask import Flask, redirect, request, jsonify, session, make_response
 from flask_cors import CORS, cross_origin
-from datetime import datetime, time
+from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import Flow
@@ -44,10 +44,11 @@ class Habit(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     description = db.Column(db.String(500))
-    completed = db.Column(db.Boolean)
-    days = db.Column(db.ARRAY(db.String(50)))
-    frequency = db.Column(db.Integer)
+    start_time = db.Column(db.Time)
+    end_time = db.Column(db.Time)
+    day = db.Column(db.String(50))
     favorite = db.Column(db.Boolean)
+    completed = db.Column(db.Boolean)
     user_id = db.Column(db.String, db.ForeignKey('users.id'), nullable=False)
 
     def serialize(self):
@@ -55,9 +56,9 @@ class Habit(db.Model):
             'id': self.id,
             'name': self.name,
             'description': self.description,
-            'completed': self.completed,
-            'days': self.days,
-            'frequency': self.frequency,
+            'start_time': self.start_time.isoformat(),
+            'end_time': self.end_time.isoformat(),
+            'day': self.day,
             'favorite': self.favorite,
             'user_id': self.user_id
         }
@@ -279,7 +280,9 @@ def journals(user_id):
         db.session.commit()
         return jsonify({'message': 'Journal added successfully!'})
     elif request.method == 'GET':
-        journals = Journal.query.filter_by(user_id=user_id).order_by(Journal.datetime.desc()).all()
+        favorite_journals = Journal.query.filter_by(user_id=user_id, favorite=True).order_by(Journal.datetime.desc()).all()
+        non_favorite_journals = Journal.query.filter_by(user_id=user_id, favorite=False).order_by(Journal.datetime.desc()).all()
+        journals = favorite_journals + non_favorite_journals
         return jsonify([journal.serialize() for journal in journals])
 
 @app.route('/api/journals/<journal_id>', methods=['PATCH', 'DELETE'])
@@ -303,10 +306,11 @@ def habits(user_id):
         data = request.get_json()
         habit = Habit(name=data['name'],
                     description=data['description'],
-                    completed=False,
-                    days=data['days'],
-                    frequency=data['frequency'],
+                    start_time=datetime.strptime(data['start_time'], "%H:%M"),
+                    end_time=datetime.strptime(data['end_time'], "%H:%M"),
+                    day=data['day'],
                     favorite=data['isFavorite'],
+                    completed=False,
                     user_id=user_id)
         db.session.add(habit)
         db.session.commit()
@@ -314,12 +318,28 @@ def habits(user_id):
     elif request.method == 'GET':
         habits = Habit.query.filter_by(user_id=user_id).all()
         return jsonify([habit.serialize() for habit in habits])
+    
+@app.route('/api/habits/<habit_id>', methods=['PATCH', 'DELETE'])
+@cross_origin()
+def habit(habit_id):
+    habit = Habit.query.get(habit_id)
+    print(habit)
+    if request.method == 'PATCH':
+        data = request.get_json()
+        habit.favorite = data['favorite']
+        db.session.commit()
+        return jsonify({'message': 'Habit updated successfully!'})
+    elif request.method == 'DELETE':
+        db.session.delete(habit)
+        db.session.commit()
+        return jsonify({'message': 'Habit deleted successfully!'})
+    
 
 # Write a print statement to show the users within the user 
 print("server side working !!! :)")
 users = Users.query.all()
 for user in users:
-    print(user.email)
+    print(user.name)
 
 
 

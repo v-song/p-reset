@@ -140,7 +140,8 @@ const About = () => {
                             Technology
                         </h2>
                         <p className="mt-4 text-lg text-gray-500">
-                            The p-reset app combines both software engineering and traditional data science elements to create a personalized self care experience. We use cutting-edge technologies such as AI and NLP to provide smart recommendations and analyze user data. The app is built using React and styled with Tailwind CSS to create a professional and modern look.
+                            The p-reset application is a unique blend of software engineering and traditional data science methodologies, designed to deliver a personalized self-care experience. It leverages a variety of cutting-edge technologies to provide intelligent recommendations and perform comprehensive user data analysis. The p-reset application utilizes a full-stack development approach, combining both frontend and backend technologies. The frontend is built with Next.js, a React framework, and styled with Tailwind CSS for a modern and professional user interface. The backend is developed using Python and Flask, with SQLAlchemy serving as the interface for the PostgreSQL database. The p-reset application is a sophisticated blend of modern web development and data science technologies, all working in harmony to create a personalized and engaging self-care experience for users.
+
                         </p>
                     </div>
                 </div>
