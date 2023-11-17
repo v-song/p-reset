@@ -26,19 +26,19 @@ db = SQLAlchemy(app)
 app.app_context().push()
 
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-
-
 # class User(db.Model):
 #     id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(50), nullable=False)
-#     email = db.Column(db.String(50), unique=True)
-#     img_url = db.Column(db.String(500))
-#     sms = db.Column(db.Integer)
-#     events = db.relationship('Event', backref='user', lazy=True)
-#     journals = db.relationship('Journal', backref='user', lazy=True)
-#     habits = db.relationship('Habit', backref='user', lazy=True)
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    # name = db.Column(db.String(50), nullable=False)
+    # email = db.Column(db.String(50), unique=True)
+    # img_url = db.Column(db.String(500))
+    # sms = db.Column(db.Integer)
+    # events = db.relationship('Event', backref='user', lazy=True)
+    # journals = db.relationship('Journal', backref='user', lazy=True)
+    habits = db.relationship('Habit', backref='user', lazy=True)
 
 
 class Habit(db.Model):
@@ -64,7 +64,7 @@ class PushSubscription(db.Model):
 
 db.create_all()
 
-@app.route('/api/habits', methods=['POST', 'GET'])
+@app.route('/api/users/<int:user_id>/habits', methods=['POST', 'GET'])
 @cross_origin(origin='http://localhost:3000')  # React's URL
 
 def habits(user_id):
@@ -115,12 +115,12 @@ def send_notifications():
                         subscription_info=subscription_info,
                         data=json.dumps({"title": "Habit Reminder", "body": habit.name}),
                         vapid_private_key=vapid_private_key,
-                        vapid_claims={"sub": "mailto:angiezhou.az@gmail.com"}
+                        vapid_claims = {"sub": "mailto:{}".format(vapid_claim)}
                     )
                 except WebPushException as e:
                     print(f"Web push failed: {e}")
 
-scheduler.add_job(send_notifications, 'interval', minutes=1)
+scheduler.add_job(send_notifications, 'cron', second=0)
 scheduler.start()
 
 
@@ -133,30 +133,11 @@ def return_home():
                    'Sadhvi', 'Erin']
     })
 
-# @app.route('/add-habit', methods=['POST'])
-# def add_habit():
-#     data = request.json
-#     name = data.get('name')
-#     notification_time_str = data.get('notification_time')
-
-#     # Convert the notification time from string to a Python datetime.time object
-#     notification_time = datetime.strptime(notification_time_str, '%H:%M').time()
-
-#     # Create a new habit instance
-#     new_habit = Habit(name=name, notification_time=notification_time)
-
-#     # Add the new habit to the database
-#     db.session.add(new_habit)
-#     db.session.commit()
-
-#     return jsonify({"message": "Habit added successfully"}), 201
-
-@app.route("/api/push-subscriptions", methods=["POST"])
-def create_push_subscription():
+@app.route("/api/users/<int:user_id>/subscriptions", methods=["POST"])
+def create_push_subscription(user_id):
     json_data = request.get_json()
     subscription = PushSubscription.query.filter_by(
-        subscription_json=json_data['subscription_json']
-    ).first()
+        subscription_json=json_data['subscription_json'], user_id=user_id).first()
     if subscription is None:
         subscription = PushSubscription(
             subscription_json=json_data['subscription_json']
