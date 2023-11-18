@@ -65,7 +65,7 @@ class PushSubscription(db.Model):
 db.create_all()
 
 @app.route('/api/users/<int:user_id>/habits', methods=['POST', 'GET'])
-@cross_origin(origin='http://localhost:3000')  # React's URL
+@cross_origin()  # React's URL
 
 def habits(user_id):
     if request.method == 'POST':
@@ -123,17 +123,8 @@ def send_notifications():
 scheduler.add_job(send_notifications, 'cron', second=0)
 scheduler.start()
 
-
-@app.route("/api/home", methods=['GET'])
-def return_home():
-    return jsonify({
-        'message': "P-reset starter page!",
-        'people': ['Sumi', 'Vivien', 'Haram', 'Tara',
-                   'Angie', 'Abrar', 'Mohamed', 'Grace',
-                   'Sadhvi', 'Erin']
-    })
-
 @app.route("/api/users/<int:user_id>/subscriptions", methods=["POST"])
+@cross_origin()
 def create_push_subscription(user_id):
     json_data = request.get_json()
     subscription = PushSubscription.query.filter_by(
