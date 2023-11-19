@@ -205,8 +205,33 @@ def add_event():
 
     creds = Credentials(**credentials)
     service = build('calendar', 'v3', credentials=creds)
+    frontend_data = request.json
+    recurrence_rule = None
+    frequency = frontend_data['frequency']
+    selected_days = frontend_data['days']
+    day_abbr = {'Monday': 'MO', 'Tuesday': 'TU', 'Wednesday': 'WE', 'Thursday': 'TH', 'Friday': 'FR', 'Saturday': 'SA', 'Sunday': 'SU'}
     
-    event_body = request.json
+    if len(selected_days) > 0:
+        recurrence_days = 'BYDAY=' + ','.join([day_abbr[day] for day in selected_days if day in day_abbr])
+    else:
+        recurrence_days = ''
+    
+    if frequency == 'every week':
+        recurrence_rule = ['RRULE:FREQ=WEEKLY;INTERVAL=1;' + recurrence_days]
+    elif frequency == 'every other week':
+        recurrence_rule = ['RRULE:FREQ=WEEKLY;INTERVAL=2;' + recurrence_days]
+    elif frequency == 'once a month':
+        recurrence_rule = ['RRULE:FREQ=MONTHLY;INTERVAL=1;' + recurrence_days]
+    event_body = {
+        'summary': frontend_data['summary'],
+        'location': frontend_data['location'],
+        'description': frontend_data['description'],
+        'start': frontend_data['start'],
+        'end': frontend_data['end'],
+        'recurrence': recurrence_rule,
+        # Add more fields as necessary
+        
+    }
     try:
         event = service.events().insert(calendarId='primary', body=event_body).execute()
         return jsonify(event)
@@ -214,48 +239,6 @@ def add_event():
         # Logging the exception
         print(f"An error occurred: {e}")
         return jsonify({"error": "Failed to add event", "details": str(e)}), 500
-    # credentials = session.get('credentials')
-    # if not credentials:
-    #     return jsonify({"error": "Not authenticated"}), 401
-
-    # creds = Credentials(**credentials)
-    # service = build('calendar', 'v3', credentials=creds)
-    
-    # frontend_data = request.json
-    # selected_days = frontend_data['days']
-    # day_abbr = {'Monday': 'MO', 'Tuesday': 'TU', 'Wednesday': 'WE', 'Thursday': 'TH', 'Friday': 'FR', 'Saturday': 'SA', 'Sunday': 'SU'}
-    # recurrence_days = ','.join([day_abbr[day] for day in selected_days if day in day_abbr])
-    # frequency = frontend_data['frequency']
-    # recurrence_rule = None
-    # if frequency == 'every week':
-    #     recurrence_rule = ['RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=' + recurrence_days]
-    # elif frequency == 'every other week':
-    #     recurrence_rule = ['RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=' + recurrence_days]
-    # elif frequency == 'once a month':
-    #     recurrence_rule = ['RRULE:FREQ=MONTHLY;INTERVAL=1;BYDAY=' + recurrence_days]
-    # event_body = {
-    #     'summary': frontend_data['header'],
-    #     'location': frontend_data['location'],
-    #     'description': frontend_data['description'],
-    #     'start': {
-    #         'dateTime': frontend_data['startDateTime'],
-    #         'timeZone': 'Your/Timezone'
-    #     },
-    #     'end': {
-    #         'dateTime': frontend_data['endDateTime'],
-    #         'timeZone': 'Your/Timezone'
-    #     },
-    #     'recurrence': recurrence_rule,
-    #     # Add more fields as necessary
-        
-    # }
-    # try:
-    #     event = service.events().insert(calendarId='primary', body=event_body).execute()
-    #     return jsonify(event)
-    # except Exception as e:
-    #     # Logging the exception
-    #     print(f"An error occurred: {e}")
-    #     return jsonify({"error": "Failed to add event", "details": str(e)}), 500
 
 
 @app.route('/logout', methods=['GET'])
