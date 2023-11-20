@@ -194,7 +194,8 @@ def get_events():
                                               maxResults=50, singleEvents=True,
                                               orderBy='startTime').execute()
     events = events_result.get('items', [])
-    
+
+    print('events', events)
     return jsonify(events)
 
 @app.route('/add_event', methods=['POST'])

@@ -4,18 +4,24 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import AddEvent from "@/components/add_event";
 import { useState, useEffect } from "react";
 import AddCalendar from "./forms/AddCalender";
+import EventDetailsPopup from "./EventDetailsPopup";
 
 
-
-function Calendar() {
+function CalendarDisplay() {
   const [userInfo, setUserInfo] = useState(null);
   const [events, setEvents] = useState([]);
-  const   calendarEvents = Array.isArray(events) ? 
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const calendarEvents = Array.isArray(events) ? 
   events.map(event => ({
     title: event.summary,
     start: new Date(event.start.dateTime),
     end: new Date(event.end.dateTime),
+    extendedProps: {
+      description: event.description,
+      location: event.location
+    },
   })) : [];
+
 
   useEffect(() => {
     fetch('http://localhost:8080/user_info', {credentials: 'include'})
@@ -32,6 +38,24 @@ function Calendar() {
           setEvents(data);
         });
 }, []);
+
+  const handleEventClick = (clickInfo) => {
+    console.log('set selected event')
+    console.log(clickInfo.event.title)
+    setSelectedEvent({
+      description: clickInfo.event.extendedProps.description,
+      location: clickInfo.event.extendedProps.location,
+      title: clickInfo.event.title,
+      start: clickInfo.event.start,
+      end: clickInfo.event.end,
+       // or however you store it
+    });
+    
+  };
+
+  const closePopup = () => {
+    setSelectedEvent(null);
+  };
 
   return (
    <div className="flex justify-between gap-4 m-5">
@@ -58,22 +82,26 @@ function Calendar() {
     <div className="flex w-full m-5">
   {/* Calendar Section */}
   <div className="w-full mb-8 z-1" >
-    <FullCalendar
-      plugins={[dayGridPlugin]}
-      initialView="dayGridMonth"
-      events={calendarEvents}
-    />
+  <FullCalendar
+            plugins={[dayGridPlugin]}
+            initialView="dayGridMonth"
+            events={calendarEvents}
+            eventClick={handleEventClick}
+          />
   </div>
- 
+  
   {/* Right Side Section for Button and Form */}
   
 </div>
 
-
-    <AddEvent/>
+    {selectedEvent ? (
+        <EventDetailsPopup event={selectedEvent} onClose={closePopup} />
+      ) : (
+        <AddEvent />
+      )}
     </div>
 
   );
 }
 
-export default Calendar;
+export default CalendarDisplay;
