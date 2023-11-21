@@ -65,7 +65,7 @@ const manual = (id) => {
       <form
         action={`/api/users/${id}/habits`}
         method="POST"
-        className="p-3 h-full w-96 flex items-start justify-center rounded-md border border-slate-700 flex-col gap-3"
+        className="p-3 h-full w-84 flex items-start justify-center rounded-md border border-slate-700 flex-col gap-3"
         onSubmit={handleSubmit}
       >
         <div className='flex justify-between w-full'>

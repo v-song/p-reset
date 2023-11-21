@@ -60,6 +60,7 @@ class Habit(db.Model):
             'end_time': self.end_time.isoformat(),
             'day': self.day,
             'favorite': self.favorite,
+            'completed': self.completed,
             'user_id': self.user_id
         }
 
@@ -300,7 +301,7 @@ def habits(user_id):
         db.session.commit()
         return jsonify({'message': 'Habit added successfully!'})
     elif request.method == 'GET':
-        habits = Habit.query.filter_by(user_id=user_id).all()
+        habits = Habit.query.filter_by(user_id=user_id).order_by(Habit.start_time).all()
         return jsonify([habit.serialize() for habit in habits])
     
 @app.route('/api/habits/<habit_id>', methods=['PATCH', 'DELETE'])
@@ -310,13 +311,18 @@ def habit(habit_id):
     print(habit)
     if request.method == 'PATCH':
         data = request.get_json()
-        habit.favorite = data['favorite']
+        if 'favorite' in data:
+            habit.favorite = data['favorite']
+        if 'completed' in data:
+            habit.completed = data['completed']
         db.session.commit()
         return jsonify({'message': 'Habit updated successfully!'})
+
     elif request.method == 'DELETE':
         db.session.delete(habit)
         db.session.commit()
         return jsonify({'message': 'Habit deleted successfully!'})
+ 
     
 
 # Write a print statement to show the users within the user 
