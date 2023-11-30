@@ -21,7 +21,9 @@ function CalendarDisplay() {
       location: event.location
     },
   })) : [];
-
+  const headerToolbar = {
+    left: 'dayGridMonth,dayGridWeek',
+  };
 
   useEffect(() => {
     fetch('http://localhost:8080/user_info', {credentials: 'include'})
@@ -83,6 +85,7 @@ function CalendarDisplay() {
   {/* Calendar Section */}
   <div className="w-full mb-8 z-1" >
   <FullCalendar
+            headerToolbar={headerToolbar}
             plugins={[dayGridPlugin]}
             initialView="dayGridMonth"
             events={calendarEvents}

@@ -11,7 +11,7 @@ function AddEvent() {
 
     const fullStartDate = `${startDate}:00`;
     const fullEndDate = `${endDate}:00`;
-    
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         const formData = new FormData(event.target);
@@ -39,8 +39,7 @@ function AddEvent() {
             });
 
             if (response.ok) {
-                alert("Event added successfully!");
-                window.location.href = "http://localhost:3000";  // Redirect to homepage
+                window.location.href = "http://localhost:3000/calender";  // Redirect to homepage
             } else {
                 alert("Failed to add event. Please try again.");
             }
@@ -50,9 +49,9 @@ function AddEvent() {
     };
 
     return (
-        <div className="bg-purple-200">
+        <div className="">
             <form 
-                className="p-3 h-full w-96 flex items-start justify-center rounded-md border border-slate-700 flex-col gap-3"
+                className="bg-purple-200 p-3 w-96 flex items-start justify-center rounded-md border border-slate-700 flex-col gap-3"
                 onSubmit={handleSubmit}
             >
                 <div className='flex justify-between w-full'>
