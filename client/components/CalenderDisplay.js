@@ -81,7 +81,32 @@ function CalendarDisplay() {
                 </ul>
             </div>
         )} */}
-    <div className="flex w-full m-5">
+    <div>
+    <div className="bg-slate-100 flex flex-col gap-1 p-2 rounded-xl">
+                <h1 className="text-2xl font-bold text-center">Your Events</h1>
+                <h1 className="font-bold text-indigo-800">
+                  Welcome to Your Personalized Self-Care Events Space!
+                </h1>
+                <p>
+  <span className="font-bold">📅 Add & View Events:</span> Use the form to seamlessly integrate moments into your Google Calendar. Make it a visual journey, adding milestones and activities effortlessly.
+</p>
+
+🔍 <p>
+  <span className="font-bold">🔍 AI Calendar Analysis:</span> Let AI analyze your calendar. It goes beyond storing events, interpreting patterns, and providing insights. Recognize trends, optimize your routine, and get personalized recommendations for efficient time management.
+</p>
+
+
+<p>
+  <span className="font-bold">📈 Time Management Insights:</span> AI offers time management insights. Identify productivity peaks, discover relaxation moments, and receive recommendations for a balanced routine. Your calendar transforms into a strategic tool for personal growth.
+</p>
+
+<p>
+  <span className="font-bold">✨ Nurturing Well-being:</span> With every event added, your Google Calendar becomes a canvas for life's moments. AI, with analytical prowess, supports well-being by providing insights, enhancing time management, and ensuring a harmonious life blend.
+</p>
+
+        </div>
+    <div className="w-full">
+    
   {/* Calendar Section */}
   <div className="w-full mb-8 z-1" >
   <FullCalendar
@@ -91,6 +116,7 @@ function CalendarDisplay() {
             events={calendarEvents}
             eventClick={handleEventClick}
           />
+  </div>
   </div>
   
   {/* Right Side Section for Button and Form */}

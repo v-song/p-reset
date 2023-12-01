@@ -3,9 +3,12 @@ import { useRouter } from 'next/router';
 import {AiOutlineStar} from 'react-icons/ai'
 import {AiFillStar} from 'react-icons/ai'
 import {BsTrash3Fill} from 'react-icons/bs'
- 
+import Journal from './forms/Journal';
+import JournalDetailsPopup from './JournalDetailsPopup';
+
 const Entries = () => {
   const [journals, setJournals] = useState([]);
+  const [selectedJournal, setSelectedJournal] = useState(null);
   const router = useRouter();
   const { id } = router.query;
 
@@ -57,6 +60,7 @@ const Entries = () => {
   }
 
   return (
+    <div className='flex py-2'>
     <div className='p-3 w-full'>
         
       <div className="flex flex-col gap-2 justify-center bg-slate-100 rounded-xl p-2">
@@ -92,12 +96,12 @@ const Entries = () => {
           return (
             <tr key={journal.id} className={`hover:bg-slate-300 ${journal.favorite && "bg-yellow-200"}`} >
               <td className="border px-4 py-2 text-center"
-              onClick={()=>openModal(journal)}>{journal.header}</td>
+              onClick={()=>setSelectedJournal(journal)}>{journal.header}</td>
               {/* <td className="border px-4 py-2">{journal.description}</td> */}
               <td className="border px-4 py-2 text-center"
-              onClick={()=>openModal(journal)}>{date}</td>
+              onClick={()=>setSelectedJournal(journal)}>{date}</td>
               <td className="border px-4 py-2 text-center"
-              onClick={()=>openModal(journal)}>{time}</td>
+              onClick={()=>setSelectedJournal(journal)}>{time}</td>
               <td className='border px-4 py-2 text-yellow-500 text-2xl w-5 hover:scale-110 hover:text-yellow-400' onClick={()=>favorite(journal.id, journal.favorite)}>
                 {
                   journal.favorite ? <AiFillStar/> : <AiOutlineStar/>
@@ -111,8 +115,14 @@ const Entries = () => {
         })}
         </tbody>
       </table>
+      </div>
+      {selectedJournal ? (
+        <JournalDetailsPopup Journal={selectedJournal} onClose={()=>setSelectedJournal(null)} />
+      ) : (
+        <Journal />
+      )}
     </div>
   );
 };
 
-export default Entries;
+export default Entries; 

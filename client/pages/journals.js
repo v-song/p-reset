@@ -7,9 +7,8 @@ const Journals = () => {
   return (
     <div>
     <Navbar/>
-    <div className="flex py-2 justify-between">
+    <div className="flex justify-between">
       <Entries/>
-      <Journal/>
       </div>
     </div>
   )

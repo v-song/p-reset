@@ -9,7 +9,7 @@ const Habits = () => {
       <Navbar/>
       <div className='flex justify-between'>
         <HabitsList/>
-        <HabitForm/>
+        
         </div>
     </div>
   )

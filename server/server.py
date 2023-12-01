@@ -67,7 +67,7 @@ class Habit(db.Model):
 class Journal(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     header = db.Column(db.String(50))
-    description = db.Column(db.String(500))
+    description = db.Column(db.Text)
     datetime =  db.Column(db.DateTime)
     file = db.Column(db.String(50))
     favorite = db.Column(db.Boolean)

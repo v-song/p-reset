@@ -1,12 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import {AiOutlineStar} from 'react-icons/ai'
 import {AiFillStar} from 'react-icons/ai'
 import {BsTrash3Fill} from 'react-icons/bs'
-import { FaCheck } from "react-icons/fa";
-import { FaXmark } from "react-icons/fa6";
 import { MdOutlineCheckBox } from "react-icons/md";
 import { MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
+import HabitForm from './forms/HabitForm';
+import HabitDetailsPopup from './HabitDetailsPopup';
 // import { DayPilotCalendar } from "@daypilot/daypilot-lite-react";
 
 const HabitsList = () => {
@@ -20,6 +20,9 @@ const HabitsList = () => {
           const [friday, setFriday] = useState([]);
           const [saturday, setSaturday] = useState([]);
           const [sunday, setSunday] = useState([]);
+          const [selectedHabit, setselectedHabit] = useState(null);
+          console.log(selectedHabit)
+
 
           useEffect(() => {
             if (!id) return;
@@ -42,11 +45,6 @@ const HabitsList = () => {
               })
               .catch((error) => console.error(error));
           }, [id]);
-
-          const openModal = (habit) => {
-            const { name, description } = habit;
-            alert(`Title: ${name}\nDescription: ${description}`);
-          };
 
           const del = (habit_id) => {
             fetch(`http://localhost:8080/api/habits/${habit_id}`, {
@@ -132,6 +130,7 @@ const HabitsList = () => {
           }, []);
 
           return (
+            <div className='flex'>
             <div className="p-3 w-full">
               <div className="bg-slate-100 flex flex-col gap-1 p-2 rounded-xl">
                 <h1 className="text-2xl font-bold text-center">Your Habits</h1>
@@ -174,7 +173,7 @@ const HabitsList = () => {
               <div className='border-r border-r-black  '>
                 <h2 className="text-xl font-bold mt-4 border-b border-b-black text-center  ">Monday </h2>
                 {monday.map((habit) => (
-                  <div key={habit.id} className={`flex items-center justify-center ${habit.favorite ? `bg-yellow-200`: `bg-gray-100`}  p-2 rounded-lg mt-2 cursor-pointer`} onClick={()=>openModal(habit)}>
+                  <div key={habit.id} className={`flex items-center justify-center ${habit.favorite ? `bg-yellow-200`: `bg-gray-100`}  p-2 rounded-lg mt-2 cursor-pointer`} onClick={()=>setselectedHabit(habit)}>
                     <div className=''>
                     <div className='flex items-center justify-between gap-2'>
                          
@@ -214,7 +213,7 @@ const HabitsList = () => {
               <div className='border-r border-r-black  '>
                 <h2 className="text-xl font-bold mt-4 border-b border-b-black text-center  ">Tuesday </h2>
                 {tuesday.map((habit) => (
-                  <div key={habit.id} className={`flex items-center justify-center ${habit.favorite ? `bg-yellow-200`: `bg-gray-100`}  p-2 rounded-lg mt-2 cursor-pointer`} onClick={()=>openModal(habit)}>
+                  <div key={habit.id} className={`flex items-center justify-center ${habit.favorite ? `bg-yellow-200`: `bg-gray-100`}  p-2 rounded-lg mt-2 cursor-pointer`} onClick={()=>setselectedHabit(habit)}>
                     <div className=''>
                     <div className='flex items-center justify-between gap-2'>
                          
@@ -253,7 +252,7 @@ const HabitsList = () => {
               <div className='border-r border-r-black  '>
                 <h2 className="text-xl font-bold mt-4 border-b border-b-black text-center  ">Wednesday </h2>
                 {wednesday.map((habit) => (
-                  <div key={habit.id} className={`flex items-center justify-center ${habit.favorite ? `bg-yellow-200`: `bg-gray-100`}  p-2 rounded-lg mt-2 cursor-pointer`} onClick={()=>openModal(habit)}>
+                  <div key={habit.id} className={`flex items-center justify-center ${habit.favorite ? `bg-yellow-200`: `bg-gray-100`}  p-2 rounded-lg mt-2 cursor-pointer`} onClick={()=>setselectedHabit(habit)}>
                     <div className=''>
                     <div className='flex items-center justify-between gap-2'>
                          
@@ -293,7 +292,7 @@ const HabitsList = () => {
               <div className='border-r border-r-black  '>
                 <h2 className="text-xl font-bold mt-4 border-b border-b-black text-center  ">Thursday </h2>
                 {thursday.map((habit) => (
-                  <div key={habit.id} className={`flex items-center justify-center ${habit.favorite ? `bg-yellow-200`: `bg-gray-100`}  p-2 rounded-lg mt-2 cursor-pointer`} onClick={()=>openModal(habit)}>
+                  <div key={habit.id} className={`flex items-center justify-center ${habit.favorite ? `bg-yellow-200`: `bg-gray-100`}  p-2 rounded-lg mt-2 cursor-pointer`} onClick={()=>setselectedHabit(habit)}>
                     <div className=''>
                     <div className='flex items-center justify-between gap-2'>
                          
@@ -333,7 +332,7 @@ const HabitsList = () => {
               <div className='border-r border-r-black  '>
                 <h2 className="text-xl font-bold mt-4 border-b border-b-black text-center  ">Friday </h2>
                 {friday.map((habit) => (
-                  <div key={habit.id} className={`flex items-center justify-center ${habit.favorite ? `bg-yellow-200`: `bg-gray-100`}  p-2 rounded-lg mt-2 cursor-pointer`} onClick={()=>openModal(habit)}>
+                  <div key={habit.id} className={`flex items-center justify-center ${habit.favorite ? `bg-yellow-200`: `bg-gray-100`}  p-2 rounded-lg mt-2 cursor-pointer`} onClick={()=>setselectedHabit(habit)}>
                     <div className=''>
                     <div className='flex items-center justify-between gap-2'>
                          
@@ -373,7 +372,7 @@ const HabitsList = () => {
               <div className='border-r border-r-black  '>
                 <h2 className="text-xl font-bold mt-4 border-b border-b-black text-center  ">Saturday </h2>
                 {saturday.map((habit) => (
-                  <div key={habit.id} className={`flex items-center justify-center ${habit.favorite ? `bg-yellow-200`: `bg-gray-100`}  p-2 rounded-lg mt-2 cursor-pointer`} onClick={()=>openModal(habit)}>
+                  <div key={habit.id} className={`flex items-center justify-center ${habit.favorite ? `bg-yellow-200`: `bg-gray-100`}  p-2 rounded-lg mt-2 cursor-pointer`} onClick={()=>setselectedHabit(habit)}>
                     <div className=''>
                     <div className='flex items-center justify-between gap-2'>
                          
@@ -413,7 +412,7 @@ const HabitsList = () => {
               <div className='border-r border-r-black  '>
                 <h2 className="text-xl font-bold mt-4 border-b border-b-black text-center  ">Sunday </h2>
                 {sunday.map((habit) => (
-                  <div key={habit.id} className={`flex items-center justify-center ${habit.favorite ? `bg-yellow-200`: `bg-gray-100`}  p-2 rounded-lg mt-2 cursor-pointer`} onClick={()=>openModal(habit)}>
+                  <div key={habit.id} className={`flex items-center justify-center ${habit.favorite ? `bg-yellow-200`: `bg-gray-100`}  p-2 rounded-lg mt-2 cursor-pointer`} onClick={()=>setselectedHabit(habit)}>
                     <div className=''>
                     <div className='flex items-center justify-between gap-2'>
                          
@@ -450,6 +449,13 @@ const HabitsList = () => {
               </div>
 
               </div> 
+            </div>
+
+            {selectedHabit ? (
+        <HabitDetailsPopup habit={selectedHabit} onClose={()=>setselectedHabit(null)} />
+      ) : (
+        <HabitForm />
+      )}
             </div>
           );
         };
