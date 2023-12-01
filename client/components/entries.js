@@ -6,11 +6,65 @@ import {BsTrash3Fill} from 'react-icons/bs'
 import Journal from './forms/Journal';
 import JournalDetailsPopup from './JournalDetailsPopup';
 
+
 const Entries = () => {
   const [journals, setJournals] = useState([]);
   const [selectedJournal, setSelectedJournal] = useState(null);
+  const [emotions, setEmotions] = useState(null)
+  const [emotionalState, setEmotionalState] = useState(null)
   const router = useRouter();
   const { id } = router.query;
+
+  const sentimentMessages = {
+    angry: [
+      "It seems like you've been expressing some frustration or anger. We're here to help resolve any issues you might be facing.",
+      "Take a deep breath. If there's a specific problem, let us know so we can assist you in finding a solution.",
+      "It's okay to feel angry. Consider expressing your feelings in a constructive way or taking a short break to cool off.",
+    ],
+    sad: [
+      "We've noticed a somewhat somber or disappointed tone. If there's anything on your mind, feel free to share, and we're here to support you.",
+      "Feeling down is normal. Reach out to friends or loved ones for support, and remember that we're here for you.",
+      "If there's a specific reason for your sadness, sharing it can sometimes lighten the load. We're here to listen.",
+    ],
+    happy: [
+      "Your recent interactions reflect a positive and happy sentiment! We're delighted to have you here.",
+      "Great to hear you're feeling positive! Keep up the good vibes. If there's anything you'd like to share or discuss, we're here to listen.",
+      "Happiness is contagious! Spread the joy around and let us know if there's anything we can do to make your experience even better.",
+    ],
+    excited: [
+      "Excitement is in the air! Your recent sentiments convey high energy and enthusiasm. What's making you so excited? We'd love to know!",
+      "Capture that energy and use it to fuel your creativity. We're here to support your exciting journey!",
+      "Share your enthusiasm with those around you. Your excitement can be a source of motivation for others.",
+    ],
+  };
+  
+  const sentimentRecommendations = {
+    angry: [
+      "Consider taking a break and coming back to the task with a fresh perspective. If there's a specific issue, let us know so we can assist you.",
+      "Reflect on the source of your anger. Is there a solution or a way to address the issue? We're here to help.",
+      "Practice self-care. Engage in activities that help you relax and release tension.",
+    ],
+    sad: [
+      "It's okay to feel down sometimes. Reach out to friends or loved ones for support. If there's anything we can do to help, please don't hesitate to ask.",
+      "Expressing your emotions can be therapeutic. Consider journaling or talking to someone you trust about what you're feeling.",
+      "Take some time for self-care. Engage in activities that bring you comfort and joy.",
+    ],
+    happy: [
+      "Keep spreading positivity! Your happiness contributes to a positive atmosphere. If there's anything we can do to enhance your experience, let us know.",
+      "Celebrate your wins, big or small. We're here to share in your joy!",
+      "Consider sharing your positive vibes with others. Your happiness can be inspiring to those around you.",
+    ],
+    excited: [
+      "Channel that excitement into something productive! If there's a project or idea you're passionate about, now might be the perfect time to dive in.",
+      "Capture that energy and use it to accomplish your goals. We're here to support you every step of the way.",
+      "Share your excitement with those around you. Your enthusiasm can be contagious!",
+    ],
+  };
+  
+  const getRandomMessage = (array) => {
+    const randomIndex = Math.floor(Math.random() * array.length);
+    return array[randomIndex];
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -22,15 +76,17 @@ const Entries = () => {
     })
     
       .then(response => response.json())
-      .then(data => setJournals(data))
-        .then(console.log(journals))
+      .then(data => { 
+        setJournals(data.journals);
+        setEmotions(data.emotions);
+        setEmotionalState(
+          data.emotions[2] <= 1.5 ? "angry" :
+          data.emotions[2] <= 2.5 ? "sad" :
+          data.emotions[2] <= 3.5 ? "happy" :
+        "excited")
+      })
       .catch(error => console.error(error));
   }, [id]);
-
-  const openModal = (journal) => {
-    const { header, description, datetime } = journal;
-    alert(`Title: ${header}\nDescription: ${description}\nDatetime: ${datetime}`);
-  }
 
   const del = (journal_id) => {
     fetch(`http://localhost:8080/api/journals/${journal_id}`,{
@@ -86,6 +142,7 @@ const Entries = () => {
             {/* <th className="border px-4 py-2">Description</th> */}
             <th className='border px-4 py-2'>Date</th>
             <th className='border px-4 py-2'>Time</th>
+            <th className='border px-4 py-2'>Emotion</th>
             <th className='border px-4 py-2'>Fav</th>
             <th className='border px-4 py-2'>Delete</th>
           </tr>
@@ -102,6 +159,8 @@ const Entries = () => {
               onClick={()=>setSelectedJournal(journal)}>{date}</td>
               <td className="border px-4 py-2 text-center"
               onClick={()=>setSelectedJournal(journal)}>{time}</td>
+              <td className="border px-4 py-2 text-center"
+              onClick={()=>setSelectedJournal(journal)}>{journal.emotion}</td>
               <td className='border px-4 py-2 text-yellow-500 text-2xl w-5 hover:scale-110 hover:text-yellow-400' onClick={()=>favorite(journal.id, journal.favorite)}>
                 {
                   journal.favorite ? <AiFillStar/> : <AiOutlineStar/>
@@ -116,11 +175,19 @@ const Entries = () => {
         </tbody>
       </table>
       </div>
+      <div className='flex flex-col gap-3 w-96 p-3 h-full bg-gradient-to-r from-blue-400 to-blue-700  rounded-md'>
+        {emotions && <img src={`data:image/png;base64,${emotions[0]}`} alt="Emotion Bar"/>}
+        {emotions && <img src={`data:image/png;base64,${emotions[1]}`} alt="Emotion Pie"/>}
+        <div className='text-slate-200 px-2 text-lg font-bold'>
+        {emotionalState && getRandomMessage(sentimentMessages[emotionalState])} <span/>
+        {emotionalState && getRandomMessage(sentimentRecommendations[emotionalState])}
+        </div>
       {selectedJournal ? (
         <JournalDetailsPopup Journal={selectedJournal} onClose={()=>setSelectedJournal(null)} />
       ) : (
-        <Journal />
+        <Journal/>
       )}
+      </div>
     </div>
   );
 };

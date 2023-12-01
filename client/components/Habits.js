@@ -21,8 +21,6 @@ const HabitsList = () => {
           const [saturday, setSaturday] = useState([]);
           const [sunday, setSunday] = useState([]);
           const [selectedHabit, setselectedHabit] = useState(null);
-          console.log(selectedHabit)
-
 
           useEffect(() => {
             if (!id) return;
@@ -409,7 +407,7 @@ const HabitsList = () => {
               </div>
 
               {/* Render Sunday habits */}
-              <div className='border-r border-r-black  '>
+              <div className=' '>
                 <h2 className="text-xl font-bold mt-4 border-b border-b-black text-center  ">Sunday </h2>
                 {sunday.map((habit) => (
                   <div key={habit.id} className={`flex items-center justify-center ${habit.favorite ? `bg-yellow-200`: `bg-gray-100`}  p-2 rounded-lg mt-2 cursor-pointer`} onClick={()=>setselectedHabit(habit)}>

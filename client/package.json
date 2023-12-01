@@ -12,9 +12,12 @@
     "@fullcalendar/core": "^6.1.9",
     "@fullcalendar/daygrid": "^6.1.9",
     "@fullcalendar/react": "^6.1.9",
+    "chart.js": "^4.4.0",
+    "d3": "^7.8.5",
     "next": "^13.5.4",
     "next-auth": "^4.23.2",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "latest"
   },
   "devDependencies": {

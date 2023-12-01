@@ -91,7 +91,7 @@ function CalendarDisplay() {
   <span className="font-bold">📅 Add & View Events:</span> Use the form to seamlessly integrate moments into your Google Calendar. Make it a visual journey, adding milestones and activities effortlessly.
 </p>
 
-🔍 <p>
+ <p>
   <span className="font-bold">🔍 AI Calendar Analysis:</span> Let AI analyze your calendar. It goes beyond storing events, interpreting patterns, and providing insights. Recognize trends, optimize your routine, and get personalized recommendations for efficient time management.
 </p>
 
@@ -105,7 +105,7 @@ function CalendarDisplay() {
 </p>
 
         </div>
-    <div className="w-full">
+    <div className="w-full mt-5">
     
   {/* Calendar Section */}
   <div className="w-full mb-8 z-1" >

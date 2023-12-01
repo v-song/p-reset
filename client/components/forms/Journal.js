@@ -46,7 +46,7 @@ const Journal = () => {
         action={`/api/users/${id}/journals`}
         method="POST"
         onSubmit={handleSubmit}
-        className="p-5 w-96 flex items-start justify-center rounded-md border border-slate-700 flex-col gap-3 bg-slate-400">
+        className="p-3 w-full flex items-start justify-center rounded-md border border-slate-700 flex-col gap-3 bg-slate-400">
           <div className='flex flex-col gap-5 justify-between w-full'>
           <div className='flex justify-between w-full'>
 

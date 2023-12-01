@@ -71,6 +71,7 @@ class Journal(db.Model):
     datetime =  db.Column(db.DateTime)
     file = db.Column(db.String(50))
     favorite = db.Column(db.Boolean)
+    emotion = db.Column(db.String(50))
     user_id = db.Column(db.String, db.ForeignKey('users.id'), nullable=False)
 
     def serialize(self):
@@ -80,6 +81,7 @@ class Journal(db.Model):
             'description': self.description,
             'datetime': self.datetime.isoformat(),
             'file': self.file,
+            'emotion': self.emotion,
             'favorite': self.favorite,
             'user_id': self.user_id
         }
@@ -249,26 +251,144 @@ def logout():
     return redirect('http://localhost:3000')
 
 
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+sia = SentimentIntensityAnalyzer()
+import pandas as pd
+import joblib
+rf_model = joblib.load('journal_model.pkl')
+
+
+def emotion(example_sent):
+    example_sent = example_sent.replace(r'.', '')
+    example_sent = example_sent.replace(r',', '')
+    example_sent = example_sent.replace(r'!', '')
+    example_sent = example_sent.replace(r';', '')
+    example_sent = example_sent.replace(r'?', '')
+    example_sent = example_sent.replace(r'(', '')
+    example_sent = example_sent.replace(r')', '')
+    example_sent = example_sent.replace(r"'", '')
+    stop_words = set(stopwords.words('english'))
+    list_contractions_common = {'arent', 'cant', 'couldnt', 'didnt', 'doesnt', 'hadnt', 'havent', 'shouldnt', 'wouldnt', 'youve','youre','wont','werent', 'weve','wed', 'theyre', 'Im', 'its'}
+    stop_words.update(list_contractions_common)
+    filtered_sentence = [w for w in example_sent.split() if not w.lower() in stop_words]
+    filtered_sentence = []
+
+    for w in example_sent.split():
+        if w not in stop_words:
+            filtered_sentence.append(w)
+
+    filtered_sentence = ' '.join(filtered_sentence)
+    pos_score = (sia.polarity_scores(filtered_sentence))['pos']
+    neg_score = (sia.polarity_scores(filtered_sentence))['neg']
+    neutral_score = (sia.polarity_scores(filtered_sentence))['neu']
+    compound_score = (sia.polarity_scores(filtered_sentence))['compound']
+
+    scores = {'positive_score': [pos_score], 'negative_score': [neg_score], 'neutral_score': [neutral_score], 'compound_score': [compound_score]}  
+    
+    # Create DataFrame  
+    df_unseen = pd.DataFrame(scores) 
+    predicted_score = rf_model.predict(df_unseen)
+    if (compound_score < 0):
+        if (predicted_score == [2]):
+            final_pred = 'angry'
+        else:
+            final_pred = 'anxious/sad'
+    elif (predicted_score == [0]):
+        final_pred = 'happy'
+    elif (predicted_score == [1]):
+        final_pred = 'excited'
+    elif (predicted_score == [2]):
+        final_pred = 'angry'
+    else:
+        final_pred = 'anxious/sad'
+    return final_pred
+
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import io
+import base64
+from collections import Counter
+def emotion_bar(emotions):
+    plt.figure(figsize=(5, 4))
+    plt.bar(range(len(emotions)), list(emotions.values()), align='center')
+    plt.xticks(range(len(emotions)), list(emotions.keys()))
+    plt.xlabel('Emotions')
+    plt.ylabel('Number of Journals')
+    plt.title('Emotions of Journals')
+    plt.tight_layout()
+    img = io.BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+
+    # Encode the BytesIO object to a base64 string
+    return base64.b64encode(img.getvalue()).decode()
+
+# make a line graph of the journals over time
+def emotion_trend(emotions, emotion_map):
+    emotions.reverse()
+    plt.figure(figsize=(5, 3))
+    plt.plot(range(len(emotions)), [emotion_map[emotion[0]] for emotion in emotions], marker='o')
+    plt.yticks([1,2,3,4], ['Angry', 'Anxious/Sad', 'Happy', 'Excited'])
+    plt.xlabel('Time')
+    plt.ylabel('Number of emotions')
+    plt.title('Emotions over Time')
+    plt.tight_layout()
+    img = io.BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+
+    # Encode the BytesIO object to a base64 string
+    return base64.b64encode(img.getvalue()).decode()
 
 @app.route('/api/users/<user_id>/journals', methods=['POST', 'GET'])
 @cross_origin()
 def journals(user_id):
     if request.method == 'POST':
         data = request.get_json()
+        # nlp emotion processing
+        final_pred = emotion(data['description'])
+
+        # push journal to database
         journal = Journal(header=data['header'],
                     description=data['description'],
                     datetime=datetime.strptime(data['datetime'], "%Y-%m-%dT%H:%M"),
                     file=data.get('file', ''),
                     favorite=data['isFavorite'],
+                    emotion=final_pred,
                     user_id=user_id)
         db.session.add(journal)
         db.session.commit()
         return jsonify({'message': 'Journal added successfully!'})
     elif request.method == 'GET':
-        favorite_journals = Journal.query.filter_by(user_id=user_id, favorite=True).order_by(Journal.datetime.desc()).all()
-        non_favorite_journals = Journal.query.filter_by(user_id=user_id, favorite=False).order_by(Journal.datetime.desc()).all()
+        journals = Journal.query.filter_by(user_id=user_id).order_by(Journal.datetime.desc()).all()
+
+        # Separate favorite and non-favorite journals
+        favorite_journals = [journal for journal in journals if journal.favorite]
+        non_favorite_journals = [journal for journal in journals if not journal.favorite]
+
+        # Combine the lists
         journals = favorite_journals + non_favorite_journals
-        return jsonify([journal.serialize() for journal in journals])
+
+        # Map emotions to numbers
+        emotion_map = {"angry":1, "anxious/sad":2, "happy":3, "excited":4}   
+
+        # Counts for bar graph, overall trend for line graph
+        bar = emotion_bar(Counter(journal.emotion for journal in journals))
+        line = emotion_trend([(journal.emotion, journal.datetime) for journal in journals], emotion_map)
+
+        # Calculate average emotion
+        sum = 0
+        for i in range(0, 5):
+            if i > len(journals) - 1: break
+            sum += emotion_map[journals[i].emotion]
+        avg_emotion = sum/5
+
+        return jsonify({'journals': [journal.serialize() for journal in journals], 'emotions': (bar,line, avg_emotion)})
+
 
 @app.route('/api/journals/<journal_id>', methods=['PATCH', 'DELETE'])
 @cross_origin()
