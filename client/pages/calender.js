@@ -4,7 +4,7 @@ import Navbar from '@/components/Navbar'
 
 const Calender = () => {
   return (
-    <div>
+    <div className='radial-gradient'>
     <Navbar/>
     <Calendar/>
     </div>

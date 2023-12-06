@@ -42,7 +42,7 @@
 input, textarea {
     width: 50%; /* Full width */
     padding: 10px; /* Add some padding */
-    margin: 8px 0; /* Add some margin for spacing */
+    margin: 10px 0; /* Add some margin for spacing */
     display: inline-block; /* Make it inline-block */
     border: 1px solid #ccc; /* Basic border */
     border-radius: 4px; /* Rounded corners */
@@ -52,25 +52,40 @@ input, textarea {
 input[type="datetime-local"] {
     width: 200px;
     padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #f9f9f9;  /* Light grey background */
+    padding-left: 15px;
+    color: #907D57;
+    background-color: #FFEDE9;  /* Light grey background */
     font-size: 16px;            /* Font size */
-    color: #333;                /* Text color */
 }
 
 input[type="datetime-local"]:focus {
-    border-color: #4CAF50;      /* Green border on focus */
-    background-color: #e9e9e9; /* Slightly darker grey background on focus */
+    color: #907D57;
+    border-color: rgb(59 130 246);     /* Green border on focus */
+    border-width: 1.5px;
+    background-color: #FFEDE9; /* Slightly darker grey background on focus */
     outline: none;              /* Remove browser default outline */
+    
 }
+
 
 textarea {
     resize: vertical; /* Allow vertical resizing only */
     min-height: 100px; /* Minimum height for the textarea */
+
 }
 
 
 hr {
     margin-top: 10px;
+}
+
+.radial-gradient {
+    background: rgb(255,239,233);
+    background: radial-gradient(circle, rgba(255,239,233,1) 0%, rgba(174,232,244,1) 100%);
+    min-width: 1280px;
+    min-height: 807px; 
+}
+
+.description {
+    background-color: FFEDE9;
 }

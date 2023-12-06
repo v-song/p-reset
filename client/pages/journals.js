@@ -5,7 +5,7 @@ import Journal from '@/components/forms/Journal'
 
 const Journals = () => {
   return (
-    <div>
+    <div className='radial-gradient'>
     <Navbar/>
     <div className="flex justify-between">
       <Entries/>

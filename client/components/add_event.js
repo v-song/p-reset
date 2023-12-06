@@ -50,38 +50,44 @@ function AddEvent() {
 
     return (
         <div className="">
+            <style jsx>{`
+                ::placeholder {
+                    color: #907D57;
+                    opacity: 1; 
+                    }
+            `}</style>
             <form 
-                className="bg-purple-200 p-3 w-96 flex items-start justify-center rounded-md border border-slate-700 flex-col gap-3"
+                className="bg-[#CEB7B7] p-6 flex items-start justify-center rounded-[20px] flex-col gap-1"
                 onSubmit={handleSubmit}
             >
                 <div className='flex justify-between w-full'>
-                    <div className="text-xl font-bold text-slate-600">Add a Calender Event</div>
+                    <div className="text-[#4E3506] text-[25px]  font-semibold">Add a Calender Event</div>
                 </div>
                 <div>
-                    <input placeholder="Add Title" type="text" className="rounded-sm p-2 focus:outline-none focus:border-b-2 w-80 focus:border-blue-500 focus:bg-slate-100" value={title} onChange={(e) => setTitle(e.target.value)} required />
+                    <input placeholder="Add Title" type="text" className="bg-[#FFEDE9] rounded-[14px] text-[#907D57] px-4 py-2 focus:outline-none focus:border-b-2 w-80 focus:border-blue-500 focus:bg-[#FFF7F9]" value={title} onChange={(e) => setTitle(e.target.value)} required />
                 </div>
                 
 
-                <div className='flex flex-col gap-2'>
+                <div className='flex flex-col '>
                     <span className='flex gap-2 items-center'>
-                    <div className='w-8 flex justify-center'>
+                    {/* <div className='w-8 flex justify-center'>
                         <BiSolidTimeFive className='text-xl text-blue-700' />
-                    </div>          
-                    <input type="datetime-local" value={startDate} onChange={(e) => setStartDate(e.target.value)} required/>
+                    </div>           */}
+                    <input type="datetime-local" value={startDate} onChange={(e) => setStartDate(e.target.value)} required className='rounded-[14px]'/>
                     </span>
                         
                     <span className='flex gap-2 items-center'>
-                    <div className='w-8 flex justify-center'>
+                    {/* <div className='w-8 flex justify-center'>
                         <p className='text-lg text-blue-700'>to</p>
-                    </div>
-                    <input type="datetime-local" value={endDate} onChange={(e) => setEndDate(e.target.value)} required/>
+                    </div> */}
+                    <input type="datetime-local" value={endDate} onChange={(e) => setEndDate(e.target.value)} required className='rounded-[14px]'/>
                     </span>
                 </div>
 
-                <div className='flex gap-2 items-center'>
-                    <p className='text-lg text-slate-400'>Repeat: </p>
+                <div className='flex gap-2 items-center py-2'>
+                    <p className='text-[#674A14] text-lg'>Repeat: </p>
                     <select
-                        className="rounded-sm p-2 focus:outline-none focus:border-b-2 w-64 focus:border-blue-500 focus:bg-slate-100"
+                        className="bg-[#FFEDE9] rounded-[14px] text-[#907D57] p-2 focus:outline-none focus:border-b-2 w-64 focus:border-blue-500 focus:bg-[#FFF7F9]"
                         name="frequency"
                         value={frequency}
                         onChange={(e) => setFrequency(e.target.value)}
@@ -96,35 +102,57 @@ function AddEvent() {
 
                 {frequency !== 'one time' && (
                 <div>
-                    <p className='text-slate-400 text-lg'>Select Occuring Days</p>
-                    <div className='flex gap-2 items-center'>
-                    <input type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" value="Monday" 
-                    name="days"/>
-                    <label className="ml-2 block text-sm text-gray-900">M</label>
+                    <p className='text-[#674A14] text-lg'>Select Occuring Days</p>
+                    <div className='pt-2 flex gap-4 items-center justify-center'>
+                        <div className="flex-col items-center justify-center">
+                            <label className="text-center block text-sm text-[#4E3506]">M</label>
+                            <input type="checkbox" className="h-5 w-5 text-blue-600 focus:ring-blue-500 rounded" value="Monday" 
+                        name="days"/>
+                            
+                        </div>
+                        <div className="flex-col items-center justify-center">
+                            <label className="text-center block text-sm text-[#4E3506]">T</label>
+                            <input type="checkbox" className="h-5 w-5 text-blue-600 focus:ring-blue-500 rounded" value="Tuesday"
+                        name="days"/>
+                            
+                        </div>
+                        <div className="flex-col items-center justify-center">
+                            <label className="text-center block text-sm text-[#4E3506]">W</label>
+                            <input type="checkbox" className="h-5 w-5 text-blue-600 focus:ring-blue-500 rounded" value="Wednesday"
+                                                name="days"/>
+                        </div>
+                        <div className="flex-col items-center justify-center">
+                            <label className="text-center block text-sm text-[#4E3506]">TR</label>
+                            <input type="checkbox" className="h-5 w-5 text-blue-600 focus:ring-blue-500 rounded" value="Thursday"
+                                                name="days"/>
+                        </div>
 
-                    <input type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" value="Tuesday"
-                    name="days"/>
-                    <label className="ml-2 block text-sm text-gray-900">T</label>
-
-                    <input type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" value="Wednesday"
-                    name="days"/>
-                    <label className="ml-2 block text-sm text-gray-900">W</label>
-
-                    <input type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" value="Thursday"
-                    name="days"/>
-                    <label className="ml-2 block text-sm text-gray-900">TR</label>
-
-                    <input type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" value="Friday"
+                        <div className="flex-col items-center justify-center">
+                            <label className="text-center block text-sm text-[#4E3506]">F</label>
+                            <input type="checkbox" className="h-5 w-5 text-blue-600 focus:ring-blue-500 rounded" value="Friday"
                     name="days" />
-                    <label className="ml-2 block text-sm text-gray-900">F</label>
+                        </div>
 
-                    <input type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" value="Saturday"
-                    name="days"/>
-                    <label className="ml-2 block text-sm text-gray-900">S</label>
-
-                    <input type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" value="Sunday"
+                        <div className="flex-col items-center justify-center">
+                            <label className="text-center block text-sm text-[#4E3506]">S</label>
+                            <input type="checkbox" className="h-5 w-5 text-blue-600 focus:ring-blue-500 rounded" value="Saturday"
+                        name="days"/>
+                        </div>
+                        
+                        <div className="flex-col items-center justify-center">
+                            <label className="text-center block text-sm text-[#4E3506]">SU</label>
+                            <input type="checkbox" className="h-5 w-5 text-blue-600 focus:ring-blue-500 rounded" value="Sunday"
                     name="days" />
-                    <label className="ml-2 block text-sm text-gray-900">SU</label>
+                        </div>
+                    
+
+                    
+                    
+                    
+
+                    
+                    
+
                     </div>
                 </div>
                 )}
@@ -132,31 +160,33 @@ function AddEvent() {
                 <div>
                     
                     <textarea placeholder="Add a description.." 
-                        className="rounded-sm p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-slate-100 w-80"
+                        className="bg-[#FFEDE9] rounded-[14px] text-[#907D57] px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-[#FFF7F9] w-80"
                         value={description} 
                         rows={4}
                         onChange={(e) => setDescription(e.target.value)} 
                     />
                 </div>
 
-                <div className='flex gap-2 items-center'>
-                    <ImLocation className='text-xl text-blue-700'/>
+                <div className='flex  items-center -mt-2'>
+                    {/* <ImLocation className='text-xl text-blue-700'/> */}
                     <input
                     placeholder="Add Location"
                     type="text"
                     name="location"
-                    className="rounded-sm p-2 focus:outline-none focus:border-b-2 w-80 focus:border-blue-500 focus:bg-slate-100"
+                    className="description bg-[#FFEDE9] rounded-[14px] px-4 py-2 focus:outline-none focus:border-b-2 w-80 focus:border-blue-500 focus:bg-[#FFF7F9]"
                     />
+                    
                 </div>
                 
-                <div className="flex">
+                <div className="flex mt-2">
                     <button
                         type="submit"
                         tabIndex={0}
-                        className="mt-3 w-24 rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-500 text-base font-medium text-white hover:bg-blue-600 hover:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ml-3 "
+                        className="text-[#907D57] w-24 rounded-[14px] border border-transparent shadow-sm px-4 py-2 bg-[#FFF6E9] text-base font-medium hover:bg-blue-600 hover:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 "
                     >
                         Confirm
                     </button>
+                    
                 </div>
             </form>
         </div>

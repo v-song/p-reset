@@ -5,7 +5,7 @@ function EventDetailsPopup({ event, onClose }) {
   
     return (
 
-        <div onClick={onClose}>
+        <div onClick={onClose} className="">
         <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
           <h3 className="text-lg font-bold">{event.title}</h3>
           <p><strong>Start:</strong> {new Date(event.start).toLocaleString()}</p>

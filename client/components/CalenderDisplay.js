@@ -81,8 +81,8 @@ function CalendarDisplay() {
                 </ul>
             </div>
         )} */}
-    <div>
-    <div className="bg-slate-100 flex flex-col gap-1 p-2 rounded-xl">
+ 
+    {/* <div className="bg-slate-100 flex flex-col gap-1 p-2 rounded-xl">
                 <h1 className="text-2xl font-bold text-center">Your Events</h1>
                 <h1 className="font-bold text-indigo-800">
                   Welcome to Your Personalized Self-Care Events Space!
@@ -104,11 +104,11 @@ function CalendarDisplay() {
   <span className="font-bold">✨ Nurturing Well-being:</span> With every event added, your Google Calendar becomes a canvas for life's moments. AI, with analytical prowess, supports well-being by providing insights, enhancing time management, and ensuring a harmonious life blend.
 </p>
 
-        </div>
-    <div className="w-full mt-5">
+        </div> */}
+    
     
   {/* Calendar Section */}
-  <div className="w-full mb-8 z-1" >
+  <div className="w-full rounded-[20px] mb-8 p-10 bg-[rgba(200,193,193,0.5)]" >
   <FullCalendar
             headerToolbar={headerToolbar}
             plugins={[dayGridPlugin]}
@@ -117,11 +117,11 @@ function CalendarDisplay() {
             eventClick={handleEventClick}
           />
   </div>
-  </div>
+
   
   {/* Right Side Section for Button and Form */}
   
-</div>
+
 
     {selectedEvent ? (
         <EventDetailsPopup event={selectedEvent} onClose={closePopup} />
