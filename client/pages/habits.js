@@ -5,7 +5,7 @@ import HabitsList from '@/components/Habits'
 
 const Habits = () => {
   return (
-    <div className='radial-gradient'>
+    <div className='radial-gradient h-screen'>
       <Navbar/>
       <div className='flex justify-between'>
         <HabitsList/>

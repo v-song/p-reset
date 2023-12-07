@@ -60,7 +60,7 @@ function CalendarDisplay() {
   };
 
   return (
-   <div className="flex justify-between gap-4 m-5">
+   <div className="flex justify-between gap-4 m-5 -mt-1">
 
     
     {/* {userInfo && (
@@ -108,6 +108,7 @@ function CalendarDisplay() {
     
     
   {/* Calendar Section */}
+
   <div className="w-full rounded-[20px] mb-8 p-10 bg-[rgba(200,193,193,0.5)]" >
   <FullCalendar
             headerToolbar={headerToolbar}
