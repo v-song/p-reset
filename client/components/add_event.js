@@ -61,7 +61,7 @@ function AddEvent() {
                 onSubmit={handleSubmit}
             >
                 <div className='flex justify-between w-full'>
-                    <div className="text-[#4E3506] text-[25px]  font-semibold">Add a Calender Event</div>
+                    <div className="text-[#4E3506] text-[25px]  font-semibold">Add a Calendar Event</div>
                 </div>
                 <div>
                     <input placeholder="Add Title" type="text" className="bg-[#FFEDE9] rounded-[14px] text-[#907D57] px-4 py-2 focus:outline-none focus:border-b-2 w-80 focus:border-blue-500 focus:bg-[#FFF7F9]" value={title} onChange={(e) => setTitle(e.target.value)} required />

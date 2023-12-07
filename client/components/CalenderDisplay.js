@@ -63,26 +63,8 @@ function CalendarDisplay() {
    <div className="flex justify-between gap-4 m-5 -mt-1">
 
     
-    {/* {userInfo && (
-            <div>
-                <img src={userInfo.picture} alt="User profile" />
-                <p>Welcome to P-reset, <strong>{userInfo.given_name}</strong>!</p>
-            </div>
-        )} */}
-    {/* {events.length > 0 && (
-            <div>
-                <h2><strong>10 Upcoming Events</strong></h2>
-                <ul>
-                    {events.map(event => (
-                        <li key={event.id}>
-                            {event.summary}: <i>{new Date(event.start.dateTime || event.start.date).toLocaleString()}</i>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        )} */}
- 
-    {/* <div className="bg-slate-100 flex flex-col gap-1 p-2 rounded-xl">
+    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-1 p-2 rounded-xl">
                 <h1 className="text-2xl font-bold text-center">Your Events</h1>
                 <h1 className="font-bold text-indigo-800">
                   Welcome to Your Personalized Self-Care Events Space!
@@ -91,20 +73,7 @@ function CalendarDisplay() {
   <span className="font-bold">📅 Add & View Events:</span> Use the form to seamlessly integrate moments into your Google Calendar. Make it a visual journey, adding milestones and activities effortlessly.
 </p>
 
- <p>
-  <span className="font-bold">🔍 AI Calendar Analysis:</span> Let AI analyze your calendar. It goes beyond storing events, interpreting patterns, and providing insights. Recognize trends, optimize your routine, and get personalized recommendations for efficient time management.
-</p>
-
-
-<p>
-  <span className="font-bold">📈 Time Management Insights:</span> AI offers time management insights. Identify productivity peaks, discover relaxation moments, and receive recommendations for a balanced routine. Your calendar transforms into a strategic tool for personal growth.
-</p>
-
-<p>
-  <span className="font-bold">✨ Nurturing Well-being:</span> With every event added, your Google Calendar becomes a canvas for life's moments. AI, with analytical prowess, supports well-being by providing insights, enhancing time management, and ensuring a harmonious life blend.
-</p>
-
-        </div> */}
+        </div>
     
     
   {/* Calendar Section */}
@@ -118,7 +87,7 @@ function CalendarDisplay() {
             eventClick={handleEventClick}
           />
   </div>
-
+  </div>
   
   {/* Right Side Section for Button and Form */}
   

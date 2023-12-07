@@ -46,7 +46,7 @@ function Navbar() {
         return <LoadingPage />;
       }
     return (
-        <div className="flex w-full justify-between items-center z-100">
+        <div className="flex w-full justify-between items-center z-100 border-b">
             <div className="p-5">
                 <Link href="/"><span className="text-[#4E3506] flex gap-2 items-center hover:border-b-2 hover:border-b-sky-800 text-[35px] font-bold "><h1>p-reset</h1><BiSolidHeart/> </span></Link>
             </div>

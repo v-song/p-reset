@@ -130,7 +130,7 @@ const HabitsList = () => {
           return (
             <div className='flex'>
             <div className="p-3 w-full">
-              <div className="bg-slate-100 flex flex-col gap-1 p-2 rounded-xl">
+              <div className=" flex flex-col gap-1 p-2 rounded-xl">
                 <h1 className="text-2xl font-bold text-center">Your Habits</h1>
                 <h1 className="font-bold text-indigo-800">
                   Welcome to Your Personalized Self-Care Habits Space!

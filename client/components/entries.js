@@ -119,7 +119,7 @@ const Entries = () => {
     <div className='flex py-2'>
     <div className='p-3 w-full'>
         
-      <div className="flex flex-col gap-2 justify-center bg-slate-100 rounded-xl p-2">
+      <div className="flex flex-col gap-2 justify-center rounded-xl p-2">
       <h1 className="text-2xl font-bold text-center">Your Journal Entries</h1>
         <p className='font-bold text-indigo-800'>Welcome to your personalized self-care journaling space! 🌿📖 </p>
 
@@ -135,16 +135,16 @@ const Entries = () => {
         <p>Ready to nurture your well-being? Start journaling now. Your self-care adventure begins with every stroke of the digital pen! ✨</p>
 
         </div>
-      <table className="table-auto w-full my-4">
+      <table className="table-auto w-full my-4 border border-black">
         <thead>
           <tr>
-            <th className="border px-4 py-2">Title</th>
+            <th className="border-2 border-black px-4 py-2">Title</th>
             {/* <th className="border px-4 py-2">Description</th> */}
-            <th className='border px-4 py-2'>Date</th>
-            <th className='border px-4 py-2'>Time</th>
-            <th className='border px-4 py-2'>Emotion</th>
-            <th className='border px-4 py-2'>Fav</th>
-            <th className='border px-4 py-2'>Delete</th>
+            <th className='border-2 border-black px-4 py-2'>Date</th>
+            <th className='border-2 border-black px-4 py-2'>Time</th>
+            <th className='border-2 border-black px-4 py-2'>Emotion</th>
+            <th className='border-2 border-black px-4 py-2'>Fav</th>
+            <th className='border-2 border-black px-4 py-2'>Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -152,21 +152,21 @@ const Entries = () => {
           const [date, time] = journal.datetime.split("T");
           return (
             <tr key={journal.id} className={`hover:bg-slate-300 ${journal.favorite && "bg-yellow-200"}`} >
-              <td className="border px-4 py-2 text-center"
+              <td className="border border-black px-4 py-2 text-center"
               onClick={()=>setSelectedJournal(journal)}>{journal.header}</td>
               {/* <td className="border px-4 py-2">{journal.description}</td> */}
-              <td className="border px-4 py-2 text-center"
+              <td className="border border-black px-4 py-2 text-center"
               onClick={()=>setSelectedJournal(journal)}>{date}</td>
-              <td className="border px-4 py-2 text-center"
+              <td className="border border-black px-4 py-2 text-center"
               onClick={()=>setSelectedJournal(journal)}>{time}</td>
-              <td className="border px-4 py-2 text-center"
+              <td className="border border-black px-4 py-2 text-center"
               onClick={()=>setSelectedJournal(journal)}>{journal.emotion}</td>
-              <td className='border px-4 py-2 text-yellow-500 text-2xl w-5 hover:scale-110 hover:text-yellow-400' onClick={()=>favorite(journal.id, journal.favorite)}>
+              <td className='border border-black px-4 py-2 text-yellow-500 text-2xl w-5 hover:scale-110 hover:text-yellow-400' onClick={()=>favorite(journal.id, journal.favorite)}>
                 {
                   journal.favorite ? <AiFillStar/> : <AiOutlineStar/>
                 }
               </td>
-              <td className='border px-4 py-2 text-center text-red-300 text-2xl w-5 hover:translate-x-1 transition-transform duration-200 hover:text-red-600' onClick={()=>del(journal.id)}>
+              <td className='border border-black px-4 py-2 text-center text-red-300 text-2xl w-5 hover:translate-x-1 transition-transform duration-200 hover:text-red-600' onClick={()=>del(journal.id)}>
                 <BsTrash3Fill />
               </td>
             </tr>
@@ -175,13 +175,7 @@ const Entries = () => {
         </tbody>
       </table>
       </div>
-      <div className='flex flex-col gap-3 w-96 p-3 h-full bg-gradient-to-r from-blue-400 to-blue-700  rounded-md'>
-        {emotions && <img src={`data:image/png;base64,${emotions[0]}`} alt="Emotion Bar"/>}
-        {emotions && <img src={`data:image/png;base64,${emotions[1]}`} alt="Emotion Pie"/>}
-        <div className='text-slate-200 px-2 text-lg font-bold'>
-        {emotionalState && getRandomMessage(sentimentMessages[emotionalState])} <span/>
-        {emotionalState && getRandomMessage(sentimentRecommendations[emotionalState])}
-        </div>
+      <div className='flex flex-col gap-3 w-96 p-3 h-full rounded-md'>
       {selectedJournal ? (
         <JournalDetailsPopup Journal={selectedJournal} onClose={()=>setSelectedJournal(null)} />
       ) : (
