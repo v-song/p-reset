@@ -21,6 +21,7 @@ const HabitsList = () => {
           const [saturday, setSaturday] = useState([]);
           const [sunday, setSunday] = useState([]);
           const [selectedHabit, setselectedHabit] = useState(null);
+          console.log(monday)
 
           useEffect(() => {
             if (!id) return;
@@ -33,13 +34,13 @@ const HabitsList = () => {
               .then((response) => response.json())
               .then((data) => {
                 console.log(data);
-                setMonday(data.filter((habit) => habit.day === 'Monday'));
-                setTuesday(data.filter((habit) => habit.day === 'Tuesday'));
-                setWednesday(data.filter((habit) => habit.day === 'Wednesday'));
-                setThursday(data.filter((habit) => habit.day === 'Thursday'));
-                setFriday(data.filter((habit) => habit.day === 'Friday'));
-                setSaturday(data.filter((habit) => habit.day === 'Saturday'));
-                setSunday(data.filter((habit) => habit.day === 'Sunday'));
+                setMonday(data.habits.filter((habit) => habit.day === 'Monday'));
+                setTuesday(data.habits.filter((habit) => habit.day === 'Tuesday'));
+                setWednesday(data.habits.filter((habit) => habit.day === 'Wednesday'));
+                setThursday(data.habits.filter((habit) => habit.day === 'Thursday'));
+                setFriday(data.habits.filter((habit) => habit.day === 'Friday'));
+                setSaturday(data.habits.filter((habit) => habit.day === 'Saturday'));
+                setSunday(data.habits.filter((habit) => habit.day === 'Sunday'));
               })
               .catch((error) => console.error(error));
           }, [id]);
