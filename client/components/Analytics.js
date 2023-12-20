@@ -81,6 +81,7 @@ Most importantly, reach out for help 🆘 managing everything on your plate. Tak
         <div className='flex gap-1'>
       {emotions && <img src={`data:image/png;base64,${emotions[3]}`} alt="Emotion Pie" className='w-56 h-48'/>}
     {emotions && <img src={`data:image/png;base64,${emotions[1]}`} alt="Emotion Line" className='w-72 h-48'/>}
+    <img src={topic_model.src} alt="Topic Model" className='w-56 h-48 rounded-md'/>
     
 
     </div>

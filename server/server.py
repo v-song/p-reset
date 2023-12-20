@@ -24,7 +24,9 @@ app.config['SESSION_FILE_DIR'] = './.flask_session/'
 app.config['SESSION_PERMANENT'] = False
 app.config['SESSION_COOKIE_NAME'] = 'session'
 # Configure the app to connect to the PostgreSQL database using SQLAlchemy
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://haramyoon:password123@p-reset.cyjuijxbcgyl.us-east-2.rds.amazonaws.com/preset'
+DATABASE_URI = os.environ.get('DATABASE_URI')
+
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Create a SQLAlchemy instance
@@ -91,7 +93,7 @@ db.create_all()
 
 Session(app)
 
-app.secret_key = 'c085ce0c5c21a4d774591a20b981013e'
+app.secret_key = os.environ.get('SECRET_KEY', '00000')
 
 CLIENT_ID = os.environ.get('CLIENT_ID', '00000')
 CLIENT_SECRET = os.environ.get('CLIENT_SECRET', '00000')
