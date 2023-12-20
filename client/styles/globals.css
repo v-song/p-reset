@@ -1,3 +1,90 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Base button styling */
+.button {
+    display: inline-block;
+    margin: 2.5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 5px;
+    background-color: #007BFF; /* Default blue color */
+    color: #FFFFFF; /* White text color */
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Hover effect for the button */
+.button:hover {
+    background-color: #0056b3; /* Slightly darker blue on hover */
+    transform: scale(1.05); /* Slightly enlarge the button on hover */
+}
+
+/* Active state (when button is clicked) */
+.button:active {
+    background-color: #004499; /* Even darker blue on active state */
+    transform: scale(0.95); /* Slightly reduce the button size when clicked */
+}
+
+/* Optional: If you want a different style for a disabled button */
+.button:disabled {
+    background-color: #CCCCCC; /* Grayish background for disabled button */
+    color: #888888; /* Grayish text color for disabled button */
+    cursor: not-allowed;
+}
+
+/* Basic styling for all input elements */
+input, textarea {
+    width: 50%; /* Full width */
+    padding: 10px; /* Add some padding */
+    margin: 10px 0; /* Add some margin for spacing */
+    display: inline-block; /* Make it inline-block */
+    border: 1px solid #ccc; /* Basic border */
+    border-radius: 4px; /* Rounded corners */
+    box-sizing: border-box; /* Box sizing */
+}
+
+input[type="datetime-local"] {
+    width: 200px;
+    padding: 10px;
+    padding-left: 15px;
+    color: #907D57;
+    background-color: #FFEDE9;  /* Light grey background */
+    font-size: 16px;            /* Font size */
+}
+
+input[type="datetime-local"]:focus {
+    color: #907D57;
+    border-color: rgb(59 130 246);     /* Green border on focus */
+    border-width: 1.5px;
+    background-color: #FFEDE9; /* Slightly darker grey background on focus */
+    outline: none;              /* Remove browser default outline */
+    
+}
+
+
+textarea {
+    resize: vertical; /* Allow vertical resizing only */
+    min-height: 100px; /* Minimum height for the textarea */
+
+}
+
+
+hr {
+    margin-top: 10px;
+}
+
+.radial-gradient {
+    background: rgb(255,239,233);
+    background: radial-gradient(circle, rgba(255,239,233,1) 0%, rgba(174,232,244,1) 100%);
+    height: 200vh;
+}
+
+.description {
+    background-color: FFEDE9;
+}
